@@ -1,15 +1,16 @@
 ## Introduction
 <p align="center">
-<img src="https://readme-typing-svg.demolab.com/?lines= Im%20Addicted%20to%20Competitive%20Programming;Developer%20of%20Python%20Django;3+%2B%20years%20of%20coding%20experience&font=Fira%20Code&center=true&width=700&height=45&color=fff53a&vCenter=true&pause=1000&size=25" /></a>
+<img src="https://readme-typing-svg.demolab.com/?lines=Im%20Addicted%20to%20Competitive%20Programming;Developer%20of%20Python%20Django;3+%2B%20years%20of%20coding%20experience&font=Fira%20Code&center=true&width=700&height=45&color=2AB4BC&vCenter=true&pause=1000&size=25" />
+
 </p>
 
 </p>
-<h3 align="center">Hey there, I'm <a href="https://github.com/kawser25350">Kawser Ahmmed</a></h3>
+<h3 align="center">Hey there, I'm <a href="https://github.com/kamrulhasansojib">Kamrul Hasan Sojib</a></h3>
 
 ## 🛠 Languages and Tools
 <p align="center"> 
-  <a href="https://github.com/kawser25350">
-    <img src="https://skillicons.dev/icons?i=c,cpp,python,java,mysql,linux,git,mongodb,vscode,github,css,html,bots"> 
+  <a href="https://github.com/kamrulhasansojib">
+    <img src="https://skillicons.dev/icons?i=c,cpp,java,mysql,linux,git,mongodb,vscode,github,css,html"> 
   </a> 
 </p>
 
@@ -25,7 +26,7 @@
     <tr>
       <!-- Profile Views -->
       <td>
-         <a href="https://github.com/kawser25350"> <img src="https://komarev.com/ghpvc/?username=kawser25350ss&style=for-the-badge&color=brightgreen"> </a>
+         <a href="https://github.com/kamrulhasansojib"> <img src="https://komarev.com/ghpvc/?username=kawser25350ss&style=for-the-badge&color=brightgreen"> </a>
       </td>
       <td> 
         <div align="left">
@@ -52,7 +53,7 @@
   <img width=390 src="https://github-readme-streak-stats-salesp07.vercel.app/?user=kawser25350&count_private=true&theme=react&border_radius=10" alt="streak stats"/>
   <img width=390 src="https://github-readme-stats-salesp07.vercel.app/api?username=kawser25350&count_private=true&show_icons=true&theme=react&rank_icon=github&border_radius=10" alt="readme stats" />
   <br/>
-  <img width=325 align="center" src="https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=kawser25350&hide=HTML&langs_count=8&layout=compact&theme=react&border_radius=10&size_weight=0.5&count_weight=0.5&exclude_repo=github-readme-stats" alt="top langs" />
+  <img width=325 align="center" src="https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=kamrulhasansojib&hide=HTML&langs_count=8&layout=compact&theme=react&border_radius=10&size_weight=0.5&count_weight=0.5&exclude_repo=github-readme-stats" alt="top langs" />
   <img alt="kawser25350 :: Leetcode" align="center" src="https://leetcode-badge-sage.vercel.app/badge/KawserAhmmed?theme=dark&bgColor=282828&border_radius=10"> <p><br></p>
 <h5 align="center">Below are a few links you can visit and some stats to look at too</h5>
 
