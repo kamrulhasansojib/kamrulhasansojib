@@ -40,16 +40,14 @@
 <h2 align="center">⚡ Stats ⚡</h2>
 <br>
 <div align="center" style="padding: 10px; margin: 10px; border: 2px solid #ccc; box-sizing: border-box;">
-    <img width=390 src="https://github-readme-streak-stats-salesp07.vercel.app/?user=kamrulhasansojib&count_private=true&theme=react&border_radius=10" alt="streak stats" style="box-sizing: border-box; padding: 10px; border-radius: 10px;"/>
-    <img width=390 src="https://github-readme-stats-salesp07.vercel.app/api?username=kamrulhasansojib&count_private=true&show_icons=true&theme=react&rank_icon=github&border_radius=10" alt="readme stats" style="box-sizing: border-box; padding: 10px; border-radius: 10px;"/>
+    <img width=410 height=182px src="https://github-readme-streak-stats-salesp07.vercel.app/?user=kamrulhasansojib&count_private=true&theme=react&border_radius=10" alt="streak stats" style="box-sizing: border-box; padding: 10px; border-radius: 10px;"/>
+    <img width=410 src="https://github-readme-stats-salesp07.vercel.app/api?username=kamrulhasansojib&count_private=true&show_icons=true&theme=react&rank_icon=github&border_radius=10" alt="readme stats" style="box-sizing: border-box; padding: 10px; border-radius: 10px;"/>
     <br/>
-    <img width=390 align="center" src="https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=kamrulhasansojib&hide=HTML&langs_count=8&layout=compact&theme=react&border_radius=10&size_weight=0.5&count_weight=0.5&exclude_repo=github-readme-stats" alt="top langs" style="box-sizing: border-box; padding: 10px; border-radius: 10px;"/>
-    <a href="https://leetcode.com/u/kamrul_hasan_sojib/" target="_blank" style="box-sizing: border-box; padding: 10px; margin-top: 10px;">
+    <img width=410 align="center" src="https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=kamrulhasansojib&hide=HTML&langs_count=8&layout=compact&theme=react&border_radius=10&size_weight=0.5&count_weight=0.5&exclude_repo=github-readme-stats" alt="top langs" style="box-sizing: border-box; padding: 10px; border-radius: 10px;"/>
       <img alt="kamrul_hasan_sojib :: Leetcode" align="center" src="https://leetcode-badge-sage.vercel.app/badge/kamrul_hasan_sojib?theme=dark&bgColor=282828&border_radius=10&gap=10px" style="border-radius: 10px;"/>
       <p><br></p>
     </a>
   </div>
-
 
 
 <h5 align="center">Below are a few links you can visit and some stats to look at too</h5>
