@@ -3,7 +3,7 @@
 <h3 align="center">Hey there, I'm <a href="https://github.com/kamrulhasansojib">Kamrul Hasan Sojib</a></h3>
 
 <p align="center">
-<img src="https://readme-typing-svg.demolab.com/?lines=3%20%2B%20years%20of%20coding%20experience;I'm%20Passionate%20about%20Web%20Development;And%20Competitive%20Programming&font=Fira%20Code&center=true&width=900&height=45&color=48CFCB&vCenter=true&pause=1000&size=20" />
+<img src="https://readme-typing-svg.demolab.com/?lines=3%20%2B%20years%20of%20coding%20experience;I'm%20Passionate%20about%20Web%20Development;And%20Competitive%20Programming&font=Fira%20Code&center=true&width=900&height=45&color=48CFCB&vCenter=true&pause=1000&size=25" />
 
   
 ## 🛠 Languages and Tools
