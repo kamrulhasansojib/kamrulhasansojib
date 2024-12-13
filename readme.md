@@ -36,7 +36,7 @@
 ## What I'm Doing
 
 - 🔭 Passionate about Full Stack Web Development
-- 🌱 Exploring the world of Cyber Security, Software Development, and beyond.
+- 🌱 Exploring the world of Cyber Security and Software Development.
 - 📩 How to contact me: kamrul-hasan-sojib- (Linkedin)
 
 <h2 align="center">⚡ Stats ⚡</h2>
