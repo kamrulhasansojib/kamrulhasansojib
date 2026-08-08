@@ -16,7 +16,7 @@ const About: React.FC = () => {
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden border border-white/10 bg-white/5 relative group">
               <img
-                src="/image/sojib1.jpeg"
+                src="/image/kamrul.jpeg"
                 alt="Profile Work"
                 className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
               />
