@@ -56,9 +56,9 @@
 
 <table align="center">
   <tr>
-    <td align="center" width="400">
+    <!-- <td align="center" width="400">
          <img src="https://dsastats.vercel.app/api/codolio/sojib19" alt="Codolio DSA Stats"/>
-    </td>
+    </td> -->
     <td align="center" width="405">
         <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" alt="LeetCode Badge"/>
     </td>
