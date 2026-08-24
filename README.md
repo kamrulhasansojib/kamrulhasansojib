@@ -1,19 +1,17 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/temp/1
-
-## Run Locally
-
-**Prerequisites:** Node.js
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Hi there, I'm Sojib 👋
+<p align="center"> <img src="https://readme-typing-svg.demolab.com/?lines=Computer+Science+Student;Software+Engineer+in+the+Making;Solving+DSA+Problems+Daily;Building+Full-Stack+Projects&font=Fira+Code&center=true&width=700&height=45&color=fff53a&vCenter=true&pause=1000&size=25" /> </p> <h3 align="center">University Student & Programmer from Bangladesh 🇧🇩</h3>
+🛠 Languages and Tools
+<p align="center"> <a href="https://github.com/kamrulhasansojib"> <img src="https://skillicons.dev/icons?i=cpp,js,react,html,css,git,github,vscode,mysql,nodejs"> </a> </p>
+🎯 What I'm Doing
+🔭 Preparing for Software Engineering roles at top tech companies
+💻 Practicing DSA daily — Arrays, Hashing, Trees, Graphs, DP and more
+🌱 Learning full-stack development (React + Node.js) alongside interview prep
+📚 University student, Bangladesh
+⚡ Fun fact: Consistency over intensity — small daily progress adds up
+📊 GitHub Stats
+<p align="center"> <img width="390" src="https://github-readme-streak-stats-salesp07.vercel.app/?user=kamrulhasansojib&theme=react&border_radius=10" alt="streak stats"/> <img width="390" src="https://github-readme-stats-salesp07.vercel.app/api?username=kamrulhasansojib&show_icons=true&theme=react&rank_icon=github&border_radius=10" alt="readme stats" /> </p> <p align="center"> <img width="60%" src="https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=kamrulhasansojib&hide=HTML&langs_count=8&layout=compact&theme=react&border_radius=10" alt="top langs" /> </p>
+🧩 LeetCode Progress
+<p align="center"> <img src="https://leetcard.jacoblin.cool/kamrulhasansojib?theme=dark&font=Roboto&ext=activity" alt="LeetCode Stats"/> </p>
+📫 Connect with Me
+<p align="center"> <a href="https://github.com/kamrulhasansojib"><img alt="followers" title="Follow me on GitHub" src="https://img.shields.io/github/followers/kamrulhasansojib?color=236ad3&style=for-the-badge&logo=github&label=Follow"/></a> </p>
+<p align="center"><i>📌 Currently focused on DSA + Software Engineering interview prep — check out my <a href="https://github.com/kamrulhasansojib/dsa-problem-solving">DSA practice repo</a>!</i></p>
