@@ -1,4 +1,5 @@
 import os
+import base64
 from datetime import datetime, timezone
 import requests
 
@@ -18,6 +19,11 @@ COLORS = {
 }
 
 GFG_GREEN = "#2F8D46"
+
+# A stable GFG logo URL (PNG). If this ever changes, replace URL only.
+GFG_LOGO_URL = "https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200x200-min.png"
+
+FONT = "ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu"
 
 def esc(s: str) -> str:
     return (
@@ -50,7 +56,7 @@ def fetch_json() -> dict:
 
 def compute_counts(data: dict) -> dict:
     totals = {k: 0 for k in ORDER}
-    totals["School"] = 0  # এই endpoint School দেয় না
+    totals["School"] = 0  # this endpoint doesn't provide School
 
     for topic in data.get("counts", []):
         for d in topic.get("difficulties", []):
@@ -66,6 +72,24 @@ def compute_counts(data: dict) -> dict:
                 totals["Hard"] += solved
 
     return totals
+
+def fetch_logo_data_uri() -> str | None:
+    """
+    Downloads GFG logo and returns data URI for embedding inside SVG.
+    Returns None if download fails.
+    """
+    try:
+        r = requests.get(
+            GFG_LOGO_URL,
+            headers={"user-agent": "Mozilla/5.0", "accept": "image/*,*/*"},
+            timeout=25,
+        )
+        if r.status_code != 200 or not r.content:
+            return None
+        b64 = base64.b64encode(r.content).decode("ascii")
+        return f"data:image/png;base64,{b64}"
+    except Exception:
+        return None
 
 def donut_segments(counts: dict, cx: int, cy: int, r: int, sw: int):
     total = sum(counts.values())
@@ -92,33 +116,44 @@ def donut_segments(counts: dict, cx: int, cy: int, r: int, sw: int):
 def build_svg(counts: dict) -> str:
     os.makedirs("assets", exist_ok=True)
 
-    # Match LeetCode aspect ratio exactly
+    # Match LeetCode card ratio
     W, H = 500, 400
 
-    # Donut (left)
-    cx, cy, r, sw = 145, 230, 92, 22
+    # Donut placement (left)
+    cx, cy, r, sw = 155, 245, 94, 22
     segs, total = donut_segments(counts, cx, cy, r, sw)
 
-    # Header (top-left)
-    logo_cx, logo_cy, logo_r = 40, 52, 16
-    header_x = 66
+    # Header placement
+    logo_x, logo_y, logo_size = 24, 28, 30
+    header_x = 64
 
-    # Legend (right)
+    # Legend placement (right)
     legend_x = 320
-    y0, dy = 165, 34  # bigger font spacing
+    y0, dy = 165, 34
     legend = []
     for i, name in enumerate(ORDER):
         y = y0 + i * dy
         legend.append(
             f'''
-    <rect x="{legend_x}" y="{y-13}" width="16" height="16" rx="2" fill="{COLORS[name]}"/>
-    <text x="{legend_x+24}" y="{y}" fill="#E6EDF3" font-size="16" font-weight="600"
-          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <rect x="{legend_x}" y="{y-13}" width="16" height="16" fill="{COLORS[name]}"/>
+    <text x="{legend_x+24}" y="{y}" fill="#E6EDF3" font-size="17" font-weight="700" font-family="{FONT}">
       {esc(name)} ({counts.get(name, 0)})
     </text>'''
         )
 
-    # NOTE: No border radius for the card (sharp corners)
+    # Try embed official logo
+    logo_data_uri = fetch_logo_data_uri()
+    if logo_data_uri:
+        logo_svg = f'''
+  <image href="{logo_data_uri}" x="{logo_x}" y="{logo_y}" width="{logo_size}" height="{logo_size}" />'''
+    else:
+        # fallback if logo download fails
+        logo_svg = f'''
+  <rect x="{logo_x}" y="{logo_y}" width="{logo_size}" height="{logo_size}" fill="{GFG_GREEN}" />
+  <text x="{logo_x + logo_size/2}" y="{logo_y + logo_size/2 + 6}" text-anchor="middle"
+        fill="#FFFFFF" font-size="14" font-weight="900" font-family="{FONT}">GFG</text>'''
+
+    # No border-radius (sharp corners) => no rx
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="GeeksforGeeks Overview">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -129,39 +164,32 @@ def build_svg(counts: dict) -> str:
 
   <rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" fill="url(#bg)" stroke="#30363D"/>
 
-  <!-- GFG Logo (simple) -->
-  <circle cx="{logo_cx}" cy="{logo_cy}" r="{logo_r}" fill="{GFG_GREEN}" />
-  <text x="{logo_cx}" y="{logo_cy+6}" text-anchor="middle" fill="#FFFFFF"
-        font-size="14" font-weight="800"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    GFG
-  </text>
+  <!-- Logo -->
+  {logo_svg}
 
-  <!-- Username + Brand -->
-  <text x="{header_x}" y="56" fill="#FFFFFF" font-size="18" font-weight="800"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+  <!-- Username -->
+  <text x="{header_x}" y="52" fill="#FFFFFF" font-size="20" font-weight="900" font-family="{FONT}">
     {esc(USERNAME)}
   </text>
-  <text x="{header_x}" y="80" fill="{GFG_GREEN}" font-size="16" font-weight="800"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+
+  <!-- Brand -->
+  <text x="{header_x}" y="78" fill="{GFG_GREEN}" font-size="18" font-weight="900" font-family="{FONT}">
     GeeksforGeeks
   </text>
 
   <!-- donut background -->
   <circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#21262D" stroke-width="{sw}"/>
 
-  <!-- donut segments (start from top) -->
+  <!-- donut segments -->
   <g transform="rotate(-90 {cx} {cy})">
 {segs}
   </g>
 
   <!-- center numbers -->
-  <text x="{cx}" y="{cy-4}" text-anchor="middle" fill="#FFFFFF" font-size="44" font-weight="900"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+  <text x="{cx}" y="{cy-6}" text-anchor="middle" fill="#FFFFFF" font-size="50" font-weight="900" font-family="{FONT}">
     {total}
   </text>
-  <text x="{cx}" y="{cy+30}" text-anchor="middle" fill="#9AA4B2" font-size="16" font-weight="600"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+  <text x="{cx}" y="{cy+30}" text-anchor="middle" fill="#9AA4B2" font-size="17" font-weight="700" font-family="{FONT}">
     Problems Solved
   </text>
 
