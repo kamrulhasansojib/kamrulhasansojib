@@ -57,23 +57,11 @@
 
 ### 📊 GitHub Stats
 
-<table align="center">
-<tr>
-    <td align="center" width="415">
-        <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" alt="LeetCode Badge"/>
-    </td>
-    <!-- <td align="center">
-      <img src="https://codeforces-readme-stats.vercel.app/api/card?username=kamrul_hasan_sojib_&theme=react&border_radius=10&height=390" width="405"/>
-    </td> -->
-    <td align="center">
-      <a href="https://www.geeksforgeeks.org/profile/kamrulhasansojib19/" target="_blank">
-        <img src="./assets/gfg-problems-overview.svg"
-             width="405" alt="GeeksforGeeks Problems Overview"/>
-      </a>
-    </td>
-  </tr>
-</table>
-
+<p align="center">
+  <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" width="405" alt="LeetCode Badge"/>
+  <img src="https://raw.githubusercontent.com/kamrulhasansojib/kamrulhasansojib/main/assets/spacer.png" width="20" height="1" alt=""/>
+  <img src="./assets/gfg-problems-overview.svg" width="405" alt="GeeksforGeeks Problems Overview"/>
+</p>
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/kamrulhasansojib/kamrulhasansojib/output/github-contribution-grid-snake-dark.svg?v=2" alt="Snake animation" />
