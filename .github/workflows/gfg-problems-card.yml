@@ -2,7 +2,7 @@ name: Generate GFG Problems Overview Card
 
 on:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 2 * * *"   # daily
   workflow_dispatch:
 
 permissions:
