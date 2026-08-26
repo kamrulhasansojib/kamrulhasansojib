@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="260" viewBox="0 0 720 260" role="img" aria-label="GFG Problems Overview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0D1117"/>
+      <stop offset="100%" stop-color="#0B1220"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="719" height="259" rx="16" fill="url(#bg)" stroke="#30363D"/>
+
+  <text x="32" y="46" fill="#FFFFFF" font-size="20" font-weight="700"
+        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    Problems Overview
+  </text>
+
+  <!-- Donut -->
+  <circle cx="140" cy="120" r="72" fill="none" stroke="#21262D" stroke-width="18" />
+
+  <g transform="rotate(-90 140 120)">
+
+  </g>
+
+  <!-- Center text -->
+  <text x="140" y="118" text-anchor="middle" fill="#FFFFFF" font-size="34" font-weight="800"
+        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    0
+  </text>
+  <text x="140" y="142" text-anchor="middle" fill="#8B949E" font-size="14"
+        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    Problems Solved
+  </text>
+
+  <!-- Legend -->
+  
+    <rect x="440" y="74" width="14" height="14" rx="3" fill="#7EE7F9"/>
+    <text x="462" y="86" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+      School (0)
+    </text>
+    <rect x="440" y="102" width="14" height="14" rx="3" fill="#CDEB8B"/>
+    <text x="462" y="114" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+      Basic (0)
+    </text>
+    <rect x="440" y="130" width="14" height="14" rx="3" fill="#8BC34A"/>
+    <text x="462" y="142" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+      Easy (0)
+    </text>
+    <rect x="440" y="158" width="14" height="14" rx="3" fill="#FFA726"/>
+    <text x="462" y="170" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+      Medium (0)
+    </text>
+    <rect x="440" y="186" width="14" height="14" rx="3" fill="#FF7043"/>
+    <text x="462" y="198" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+      Hard (0)
+    </text>
+
+  <text x="32" y="236" fill="#8B949E" font-size="11"
+        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    Source: geeksforgeeks.org • Updated: 2026-08-26 15:56 UTC • User: kamrulhasansojib19
+  </text>
+</svg>
