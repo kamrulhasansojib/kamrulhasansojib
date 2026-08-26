@@ -59,7 +59,7 @@
 
 <table align="center">
 <tr>
-    <td align="center" width="405">
+    <td align="center" width="415">
         <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" alt="LeetCode Badge"/>
     </td>
     <!-- <td align="center">
