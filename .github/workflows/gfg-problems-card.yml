@@ -1,9 +1,9 @@
-name: Generate GFG Problems Overview Card
+name: Generate GFG Problems Overview Card (API)
 
 on:
-  schedule:
-    - cron: "0 2 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * *"
 
 permissions:
   contents: write
@@ -20,19 +20,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Playwright
+      - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          pip install playwright
-          python -m playwright install --with-deps chromium
+          pip install requests
 
-      - name: Generate SVG (network sniff + optional cookies)
+      - name: Generate SVG from GFG API
         env:
-          GFG_USERNAME: kamrulhasansojib19
-          # Optional: create this secret if needed (explained below)
-          GFG_COOKIES_JSON: ${{ secrets.GFG_COOKIES_JSON }}
+          GFG_API_URL: "https://practiceapi.geeksforgeeks.org/api/latest/problems/topic-wise/counts/?categoryId=308,310,313,301,318,305,302,315,303,300,298,288,285,312,335,468,337,336,339,329,307,332,306,372,346"
+          GFG_COOKIE_HEADER: ${{ secrets.GFG_COOKIE_HEADER }}
+          GFG_USERNAME: "kamrulhasansojib19"
         run: |
-          python scripts/gfg_gfg_overview_v5.py
+          python scripts/gfg_api_overview_card.py
 
       - name: Commit & push if changed
         run: |
@@ -43,5 +42,5 @@ jobs:
             echo "No changes."
             exit 0
           fi
-          git commit -m "chore: update GFG problems overview card"
+          git commit -m "chore: update GFG overview card (api)"
           git push
