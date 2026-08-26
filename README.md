@@ -27,15 +27,16 @@
 <h3>🌐 Connect With Me</h3>
 
 <p align="center">
+  <a href="https://kamrul-hasan-sojib.netlify.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0F172A" alt="Portfolio"/>
+  </a>
   <a href="https://linkedin.com/in/kamrul-hasan-sojib-/" target="_blank">
     <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F172A" alt="LinkedIn"/>
   </a>
   <a href="mailto:kamrulhasansojib@gmail.com">
     <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white&labelColor=0F172A" alt="Gmail"/>
   </a>
-  <a href="https://kamrul-hasan-sojib.netlify.app/" target="_blank">
-    <img src="https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0F172A" alt="Portfolio"/>
-  </a>
+  
 </p>
 
 ### 🚀 Featured Projects
