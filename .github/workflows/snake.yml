@@ -5,7 +5,7 @@ on:
     - cron: "0 */12 * * *"
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
       - name: Generate Snake
         uses: Platane/snk@v3
         with:
-          github_user_name: kamrul-hasan-sojib
+          github_user_name: kamrulhasansojib
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
