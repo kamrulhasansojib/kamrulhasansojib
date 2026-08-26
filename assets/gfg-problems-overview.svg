@@ -13,14 +13,12 @@
     Problems Overview
   </text>
 
-  <!-- Donut -->
-  <circle cx="140" cy="120" r="72" fill="none" stroke="#21262D" stroke-width="18" />
+  <circle cx="140" cy="120" r="72" fill="none" stroke="#21262D" stroke-width="18"/>
 
   <g transform="rotate(-90 140 120)">
 
   </g>
 
-  <!-- Center text -->
   <text x="140" y="118" text-anchor="middle" fill="#FFFFFF" font-size="34" font-weight="800"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     0
@@ -30,31 +28,35 @@
     Problems Solved
   </text>
 
-  <!-- Legend -->
   
     <rect x="440" y="74" width="14" height="14" rx="3" fill="#7EE7F9"/>
-    <text x="462" y="86" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <text x="462" y="86" fill="#C9D1D9" font-size="14"
+          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       School (0)
     </text>
     <rect x="440" y="102" width="14" height="14" rx="3" fill="#CDEB8B"/>
-    <text x="462" y="114" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <text x="462" y="114" fill="#C9D1D9" font-size="14"
+          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Basic (0)
     </text>
     <rect x="440" y="130" width="14" height="14" rx="3" fill="#8BC34A"/>
-    <text x="462" y="142" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <text x="462" y="142" fill="#C9D1D9" font-size="14"
+          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Easy (0)
     </text>
     <rect x="440" y="158" width="14" height="14" rx="3" fill="#FFA726"/>
-    <text x="462" y="170" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <text x="462" y="170" fill="#C9D1D9" font-size="14"
+          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Medium (0)
     </text>
     <rect x="440" y="186" width="14" height="14" rx="3" fill="#FF7043"/>
-    <text x="462" y="198" fill="#C9D1D9" font-size="14" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <text x="462" y="198" fill="#C9D1D9" font-size="14"
+          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Hard (0)
     </text>
 
   <text x="32" y="236" fill="#8B949E" font-size="11"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    Source: geeksforgeeks.org • Updated: 2026-08-26 15:56 UTC • User: kamrulhasansojib19
+    Source: geeksforgeeks.org • Updated: 2026-08-26 16:30 UTC • User: kamrulhasansojib19
   </text>
 </svg>
