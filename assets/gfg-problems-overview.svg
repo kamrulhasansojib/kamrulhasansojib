@@ -19,12 +19,16 @@
   <!-- donut segments (start from top) -->
   <g transform="rotate(-90 135 210)">
 
+      <circle cx="135" cy="210" r="86" pathLength="100"
+              fill="none" stroke="#CDEB8B" stroke-width="20"
+              stroke-dasharray="100.000000 0.000000"
+              stroke-dashoffset="-0.000000" />
   </g>
 
   <!-- center numbers -->
   <text x="135" y="208" text-anchor="middle" fill="#FFFFFF" font-size="38" font-weight="800"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    0
+    1
   </text>
   <text x="135" y="236" text-anchor="middle" fill="#8B949E" font-size="14"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
@@ -41,7 +45,7 @@
     <rect x="300" y="177" width="14" height="14" rx="3" fill="#CDEB8B"/>
     <text x="322" y="189" fill="#C9D1D9" font-size="14"
           font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-      Basic (0)
+      Basic (1)
     </text>
     <rect x="300" y="211" width="14" height="14" rx="3" fill="#8BC34A"/>
     <text x="322" y="223" fill="#C9D1D9" font-size="14"
@@ -61,6 +65,6 @@
 
   <text x="28" y="378" fill="#8B949E" font-size="11"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    Source: practiceapi.geeksforgeeks.org • Updated: 2026-08-26 18:37 UTC • User: kamrulhasansojib19
+    Source: practiceapi.geeksforgeeks.org • Updated: 2026-08-26 18:47 UTC • User: kamrulhasansojib19
   </text>
 </svg>
