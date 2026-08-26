@@ -2,7 +2,7 @@ name: Generate GFG Problems Overview Card
 
 on:
   schedule:
-    - cron: "0 2 * * *"   # daily
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,11 +26,13 @@ jobs:
           pip install playwright
           python -m playwright install --with-deps chromium
 
-      - name: Generate SVG
+      - name: Generate SVG (network sniff + optional cookies)
         env:
           GFG_USERNAME: kamrulhasansojib19
+          # Optional: create this secret if needed (explained below)
+          GFG_COOKIES_JSON: ${{ secrets.GFG_COOKIES_JSON }}
         run: |
-          python scripts/gfg_problems_overview_card_playwright.py
+          python scripts/gfg_gfg_overview_v5.py
 
       - name: Commit & push if changed
         run: |
