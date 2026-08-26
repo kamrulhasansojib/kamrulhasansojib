@@ -6,10 +6,12 @@ from playwright.sync_api import sync_playwright
 
 USERNAME = os.environ.get("GFG_USERNAME", "kamrulhasansojib19").strip()
 
+# GFG বিভিন্ন URL এ widget দেখায়—তাই multiple try
 URLS = [
     f"https://www.geeksforgeeks.org/user/{USERNAME}/practice/",
     f"https://www.geeksforgeeks.org/user/{USERNAME}/",
     f"https://www.geeksforgeeks.org/profile/{USERNAME}/",
+    f"https://www.geeksforgeeks.org/profile/{USERNAME}/?ref=profile",
 ]
 
 OUT_FILE = "assets/gfg-problems-overview.svg"
@@ -35,39 +37,46 @@ def esc(s: str) -> str:
     )
 
 
-def parse_counts_from_text(text: str):
+def parse_counts_anywhere(text_or_html: str):
+    """
+    Works if the page contains:
+      School (0) Basic (1) Easy (0) Medium (0) Hard (0)
+    Either in text or inside svg/html.
+    """
     counts = {}
     for name in ORDER:
-        m = re.search(rf"{name}\s*\(\s*(\d+)\s*\)", text, flags=re.IGNORECASE)
+        m = re.search(rf"{name}\s*\(\s*(\d+)\s*\)", text_or_html, flags=re.IGNORECASE)
         if m:
             counts[name] = int(m.group(1))
-    if len(counts) == len(ORDER):
+    if len(counts) == 5:
         return {k: counts[k] for k in ORDER}
     return None
 
 
-def parse_counts_from_html(html: str):
+def parse_counts_json_like(html: str):
     """
-    Fallback: rendered HTML-এ JSON/state থাকতে পারে।
-    key: "school": 0, "basic": 1 ... এর মতো থাকলে ধরবে।
+    Fallback: sometimes counts exist as JSON in HTML like:
+      "school":0,"basic":1,"easy":0,"medium":0,"hard":0
     """
-    key_map = {
-        "School": "school",
-        "Basic": "basic",
-        "Easy": "easy",
-        "Medium": "medium",
-        "Hard": "hard",
-    }
-
     found = {}
+    key_map = {"School": "school", "Basic": "basic", "Easy": "easy", "Medium": "medium", "Hard": "hard"}
     for label, key in key_map.items():
         m = re.search(rf'"{key}"\s*:\s*(\d+)', html, flags=re.IGNORECASE)
         if m:
             found[label] = int(m.group(1))
-
     if len(found) == 5:
-        return {k: found.get(k, 0) for k in ORDER}
+        return {k: found[k] for k in ORDER}
     return None
+
+
+def auto_scroll(page, steps=14):
+    page.evaluate("window.scrollTo(0, 0)")
+    page.wait_for_timeout(800)
+    for _ in range(steps):
+        page.mouse.wheel(0, 900)
+        page.wait_for_timeout(650)
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    page.wait_for_timeout(1500)
 
 
 def donut_segments(counts):
@@ -150,69 +159,60 @@ def build_svg(counts):
 """
 
 
-def auto_scroll(page, steps=10):
-    # lazy load trigger করার জন্য scroll
-    page.evaluate("window.scrollTo(0, 0)")
-    page.wait_for_timeout(800)
-    for i in range(steps):
-        page.evaluate("window.scrollBy(0, Math.floor(document.body.scrollHeight/10))")
-        page.wait_for_timeout(900)
-    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-    page.wait_for_timeout(1200)
-
-
 def main():
     counts = None
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         ctx = browser.new_context(
+            viewport={"width": 1400, "height": 900},
             user_agent=(
                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
                 "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
             ),
-            viewport={"width": 1400, "height": 900},
         )
         page = ctx.new_page()
 
         for url in URLS:
-            print("TRY URL:", url)
             try:
-                page.goto(url, wait_until="networkidle", timeout=60000)
-            except Exception:
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_timeout(2500)
+                auto_scroll(page)
+                # wait a bit more for lazy widgets
+                page.wait_for_timeout(3500)
+            except Exception:
+                continue
 
-            page.wait_for_timeout(2500)
-            auto_scroll(page, steps=12)
-
-            print("PAGE URL:", page.url)
-
-            text = page.inner_text("body")
-            snippet = " ".join(text.split())[:350]
-            print("PAGE TEXT SNIPPET:", snippet)
-
-            counts = parse_counts_from_text(text)
+            # Try from rendered text
+            try:
+                text = page.locator("body").inner_text(timeout=10000)
+            except Exception:
+                text = ""
+            counts = parse_counts_anywhere(text)
             if counts:
-                print("PARSED FROM TEXT ✅")
                 break
 
+            # Try from rendered HTML
             html = page.content()
-            counts = parse_counts_from_html(html)
+            counts = parse_counts_anywhere(html)
             if counts:
-                print("PARSED FROM HTML ✅")
+                break
+
+            counts = parse_counts_json_like(html)
+            if counts:
                 break
 
         browser.close()
 
     if not counts:
         counts = {k: 0 for k in ORDER}
-        print("FAILED TO PARSE ❌ using fallback zeros")
 
-    print("Counts:", counts, "Total:", sum(counts.values()))
-
+    svg = build_svg(counts)
     os.makedirs("assets", exist_ok=True)
     with open(OUT_FILE, "w", encoding="utf-8") as f:
-        f.write(build_svg(counts))
+        f.write(svg)
+
+    print("Counts:", counts, "Total:", sum(counts.values()))
     print("Generated:", OUT_FILE)
 
 
