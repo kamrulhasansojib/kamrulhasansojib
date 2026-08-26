@@ -1,15 +1,17 @@
 import os
 import re
-import json
 from datetime import datetime, timezone
 
 from playwright.sync_api import sync_playwright
 
 USERNAME = os.environ.get("GFG_USERNAME", "kamrulhasansojib19").strip()
-PROFILE_URLS = [
+
+URLS = [
+    f"https://www.geeksforgeeks.org/user/{USERNAME}/practice/",
     f"https://www.geeksforgeeks.org/user/{USERNAME}/",
     f"https://www.geeksforgeeks.org/profile/{USERNAME}/",
 ]
+
 OUT_FILE = "assets/gfg-problems-overview.svg"
 
 ORDER = ["School", "Basic", "Easy", "Medium", "Hard"]
@@ -20,47 +22,6 @@ COLORS = {
     "Medium": "#FFA726",
     "Hard": "#FF7043",
 }
-
-
-def deep_find_counts(obj):
-    """__NEXT_DATA__ JSON থেকে counts খোঁজার fallback"""
-    if isinstance(obj, dict):
-        lower = {str(k).lower(): k for k in obj.keys()}
-        if all(k in lower for k in ["school", "basic", "easy", "medium", "hard"]):
-            try:
-                counts = {
-                    "School": int(obj[lower["school"]]),
-                    "Basic": int(obj[lower["basic"]]),
-                    "Easy": int(obj[lower["easy"]]),
-                    "Medium": int(obj[lower["medium"]]),
-                    "Hard": int(obj[lower["hard"]]),
-                }
-                if all(v >= 0 for v in counts.values()):
-                    return counts
-            except Exception:
-                pass
-        for v in obj.values():
-            f = deep_find_counts(v)
-            if f:
-                return f
-    if isinstance(obj, list):
-        for it in obj:
-            f = deep_find_counts(it)
-            if f:
-                return f
-    return None
-
-
-def parse_rendered_text(text: str):
-    """Rendered page থেকে 'School (0) Basic (1) ...' প্যাটার্ন খোঁজা"""
-    counts = {}
-    for name in ORDER:
-        m = re.search(rf"{name}\s*\(\s*(\d+)\s*\)", text, flags=re.IGNORECASE)
-        if m:
-            counts[name] = int(m.group(1))
-    if len(counts) == len(ORDER):
-        return {k: counts[k] for k in ORDER}
-    return None
 
 
 def esc(s: str) -> str:
@@ -74,10 +35,46 @@ def esc(s: str) -> str:
     )
 
 
+def parse_counts_from_text(text: str):
+    counts = {}
+    for name in ORDER:
+        m = re.search(rf"{name}\s*\(\s*(\d+)\s*\)", text, flags=re.IGNORECASE)
+        if m:
+            counts[name] = int(m.group(1))
+    if len(counts) == len(ORDER):
+        return {k: counts[k] for k in ORDER}
+    return None
+
+
+def parse_counts_from_html(html: str):
+    """
+    Fallback: rendered HTML-এ JSON/state থাকতে পারে।
+    key: "school": 0, "basic": 1 ... এর মতো থাকলে ধরবে।
+    """
+    key_map = {
+        "School": "school",
+        "Basic": "basic",
+        "Easy": "easy",
+        "Medium": "medium",
+        "Hard": "hard",
+    }
+
+    found = {}
+    for label, key in key_map.items():
+        m = re.search(rf'"{key}"\s*:\s*(\d+)', html, flags=re.IGNORECASE)
+        if m:
+            found[label] = int(m.group(1))
+
+    if len(found) == 5:
+        return {k: found.get(k, 0) for k in ORDER}
+    return None
+
+
 def donut_segments(counts):
     total = sum(counts.values())
     if total <= 0:
         return "", total
+
     segs, offset = [], 0.0
     for name in ORDER:
         val = counts.get(name, 0)
@@ -153,6 +150,17 @@ def build_svg(counts):
 """
 
 
+def auto_scroll(page, steps=10):
+    # lazy load trigger করার জন্য scroll
+    page.evaluate("window.scrollTo(0, 0)")
+    page.wait_for_timeout(800)
+    for i in range(steps):
+        page.evaluate("window.scrollBy(0, Math.floor(document.body.scrollHeight/10))")
+        page.wait_for_timeout(900)
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    page.wait_for_timeout(1200)
+
+
 def main():
     counts = None
 
@@ -163,40 +171,42 @@ def main():
                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
                 "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
             ),
-            viewport={"width": 1280, "height": 900},
+            viewport={"width": 1400, "height": 900},
         )
         page = ctx.new_page()
 
-        for url in PROFILE_URLS:
+        for url in URLS:
+            print("TRY URL:", url)
             try:
                 page.goto(url, wait_until="networkidle", timeout=60000)
             except Exception:
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
-            page.wait_for_timeout(6000)
 
-            rendered = page.inner_text("body")
+            page.wait_for_timeout(2500)
+            auto_scroll(page, steps=12)
+
             print("PAGE URL:", page.url)
-            print("PAGE TEXT SNIPPET:", " ".join(rendered.split())[:300])
 
-            counts = parse_rendered_text(rendered)
+            text = page.inner_text("body")
+            snippet = " ".join(text.split())[:350]
+            print("PAGE TEXT SNIPPET:", snippet)
+
+            counts = parse_counts_from_text(text)
             if counts:
+                print("PARSED FROM TEXT ✅")
                 break
 
-            try:
-                nd = page.eval_on_selector(
-                    "script#__NEXT_DATA__", "el => el.textContent"
-                )
-                if nd:
-                    counts = deep_find_counts(json.loads(nd))
-                    if counts:
-                        break
-            except Exception:
-                pass
+            html = page.content()
+            counts = parse_counts_from_html(html)
+            if counts:
+                print("PARSED FROM HTML ✅")
+                break
 
         browser.close()
 
     if not counts:
         counts = {k: 0 for k in ORDER}
+        print("FAILED TO PARSE ❌ using fallback zeros")
 
     print("Counts:", counts, "Total:", sum(counts.values()))
 
