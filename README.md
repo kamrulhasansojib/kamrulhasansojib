@@ -6,6 +6,12 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=kamrulhasansojib&label=Profile%20Views&color=58A6FF&style=flat" alt="Profile Views" />
+  <img src="https://img.shields.io/github/followers/kamrulhasansojib?label=Followers&style=social" alt="GitHub Followers" />
+</p>
+
+
 ---
 
 
@@ -18,21 +24,25 @@
 *  Exploring disaster-response & emergency-intelligence systems, and open to Software Engineering roles
 *  Reach me via GitHub
   
-<p align="center">
-  <a href="https://linkedin.com/in/kamrul-hasan-sojib-/" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F172A" alt="LinkedIn"/></a>
-  <a href="mailto:kamrulhasansojib@gmail.com"><img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white&labelColor=0F172A" alt="Gmail"/></a>
-</p>
-
 
 ---
 
 
 
-### 🔗 Portfolio
- 
+## 🌐 Connect With Me
+
 <p align="center">
-  <a href="https://kamrul-hasan-sojib.netlify.app/"><img src="https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white" /></a>
+  <a href="https://linkedin.com/in/kamrul-hasan-sojib-/" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0F172A" alt="LinkedIn"/>
+  </a>
+  <a href="mailto:kamrulhasansojib@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white&labelColor=0F172A" alt="Gmail"/>
+  </a>
+  <a href="https://kamrul-hasan-sojib.netlify.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=0F172A" alt="Portfolio"/>
+  </a>
 </p>
+
 
 ### 🚀 Featured Projects
 
