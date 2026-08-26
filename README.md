@@ -24,7 +24,7 @@
 
 ---
 
-## 🌐 Connect With Me
+<h3>🌐 Connect With Me</h3>
 
 <p align="center">
   <a href="https://linkedin.com/in/kamrul-hasan-sojib-/" target="_blank">
