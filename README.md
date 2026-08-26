@@ -59,7 +59,7 @@
 
 <p align="center">
   <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" width="405" alt="LeetCode Badge"/>
-  <img src="https://raw.githubusercontent.com/kamrulhasansojib/kamrulhasansojib/main/assets/spacer.png" width="20" height="1" alt=""/>
+   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./assets/gfg-problems-overview.svg" width="405" alt="GeeksforGeeks Problems Overview"/>
 </p>
 
