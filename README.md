@@ -55,10 +55,6 @@
 ### 📊 GitHub Stats
 
 <table align="center">
-  <!-- <tr>
-    <td align="center" width="400">
-  <img src="https://raw.githubusercontent.com/kamrulhasansojib/Spotify-Clone/dsaStats/codolio-stats.svg" alt="Codolio DSA Stats"/>
-</td> -->
     <td align="center" width="405">
         <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" alt="LeetCode Badge"/>
     </td>
@@ -68,12 +64,9 @@
   </tr>
 </table>
 
-<table align="center">
-  <tr>
-    <td align="center">
-      <img src="https://github-readme-activity-graph.vercel.app/graph?username=kamrulhasansojib&theme=github-dark&bg_color=0d1117&color=58a6ff&line=58a6ff&point=c9d1d9&hide_border=true" width="810" alt="Activity Graph"/>
-    </td>
-  </tr>
-</table>
+ <p align="center">
+  <img src="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg" alt="Snake animation" />
+</p
+
 
 <p align="center">⭐️ Thanks for visiting my profile!</p>
