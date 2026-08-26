@@ -14,6 +14,8 @@
 
 
 
+<h1 align="center">Kamrul Hasan Sojib</h1>
+
 <p align="center">
   <a href="https://www.geeksforgeeks.org/profile/kamrulhasansojib19/" target="_blank">
     <img src="./assets/gfg-problems-overview.svg" alt="GeeksforGeeks Problems Overview" />
