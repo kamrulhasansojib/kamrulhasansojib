@@ -6,7 +6,6 @@ API_URL = os.environ.get("GFG_API_URL", "").strip()
 COOKIE_HEADER = (os.environ.get("GFG_COOKIE_HEADER") or "").strip()
 USERNAME = os.environ.get("GFG_USERNAME", "kamrulhasansojib19").strip()
 
-# IMPORTANT: output name (match your README path)
 OUT_FILE = "assets/gfg-problems-overview.svg"
 
 ORDER = ["School", "Basic", "Easy", "Medium", "Hard"]
@@ -49,9 +48,7 @@ def fetch_json() -> dict:
 
 def compute_counts(data: dict) -> dict:
     totals = {k: 0 for k in ORDER}
-
-    # এই endpoint "School" দেয় না
-    totals["School"] = 0
+    totals["School"] = 0  # এই endpoint School দেয় না
 
     for topic in data.get("counts", []):
         for d in topic.get("difficulties", []):
@@ -93,18 +90,16 @@ def donut_segments(counts: dict, cx: int, cy: int, r: int, sw: int):
 def build_svg(counts: dict) -> str:
     os.makedirs("assets", exist_ok=True)
 
-    # Match LeetCode SVG size exactly
-    W, H = 500, 400
+    # Slightly shorter than before
+    W, H = 500, 390
 
-    # Donut geometry (left side)
-    cx, cy, r, sw = 135, 210, 86, 20
+    # Donut geometry
+    cx, cy, r, sw = 135, 200, 86, 20
     segs, total = donut_segments(counts, cx, cy, r, sw)
 
-    updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-
-    # Legend (right side)
+    # Legend placement
     legend_x = 300
-    y0, dy = 155, 34
+    y0, dy = 145, 34
     legend = []
     for i, name in enumerate(ORDER):
         y = y0 + i * dy
@@ -117,7 +112,8 @@ def build_svg(counts: dict) -> str:
     </text>'''
         )
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="GFG Problems Overview">
+    # NOTE: border radius removed (no rx)
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="GeeksforGeeks Overview">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0D1117"/>
@@ -125,17 +121,17 @@ def build_svg(counts: dict) -> str:
     </linearGradient>
   </defs>
 
-  <rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="18" fill="url(#bg)" stroke="#30363D"/>
+  <rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" fill="url(#bg)" stroke="#30363D"/>
 
-  <text x="28" y="58" fill="#FFFFFF" font-size="20" font-weight="700"
+  <text x="28" y="56" fill="#FFFFFF" font-size="20" font-weight="700"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    Problems Overview
+    GeeksforGeeks
   </text>
 
   <!-- donut background -->
   <circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#21262D" stroke-width="{sw}"/>
 
-  <!-- donut segments (start from top) -->
+  <!-- donut segments -->
   <g transform="rotate(-90 {cx} {cy})">
 {segs}
   </g>
@@ -152,11 +148,6 @@ def build_svg(counts: dict) -> str:
 
   <!-- legend -->
   {''.join(legend)}
-
-  <text x="28" y="{H-22}" fill="#8B949E" font-size="11"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    Source: practiceapi.geeksforgeeks.org • Updated: {esc(updated)} • User: {esc(USERNAME)}
-  </text>
 </svg>
 """
 
