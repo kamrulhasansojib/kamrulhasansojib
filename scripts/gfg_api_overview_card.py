@@ -17,6 +17,8 @@ COLORS = {
     "Hard": "#FF7043",
 }
 
+GFG_GREEN = "#2F8D46"
+
 def esc(s: str) -> str:
     return (
         str(s)
@@ -90,29 +92,33 @@ def donut_segments(counts: dict, cx: int, cy: int, r: int, sw: int):
 def build_svg(counts: dict) -> str:
     os.makedirs("assets", exist_ok=True)
 
-    # Slightly shorter than before
-    W, H = 500, 390
+    # Match LeetCode aspect ratio exactly
+    W, H = 500, 400
 
-    # Donut geometry
-    cx, cy, r, sw = 135, 200, 86, 20
+    # Donut (left)
+    cx, cy, r, sw = 145, 230, 92, 22
     segs, total = donut_segments(counts, cx, cy, r, sw)
 
-    # Legend placement
-    legend_x = 300
-    y0, dy = 145, 34
+    # Header (top-left)
+    logo_cx, logo_cy, logo_r = 40, 52, 16
+    header_x = 66
+
+    # Legend (right)
+    legend_x = 320
+    y0, dy = 165, 34  # bigger font spacing
     legend = []
     for i, name in enumerate(ORDER):
         y = y0 + i * dy
         legend.append(
             f'''
-    <rect x="{legend_x}" y="{y-12}" width="14" height="14" rx="3" fill="{COLORS[name]}"/>
-    <text x="{legend_x+22}" y="{y}" fill="#C9D1D9" font-size="14"
+    <rect x="{legend_x}" y="{y-13}" width="16" height="16" rx="2" fill="{COLORS[name]}"/>
+    <text x="{legend_x+24}" y="{y}" fill="#E6EDF3" font-size="16" font-weight="600"
           font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       {esc(name)} ({counts.get(name, 0)})
     </text>'''
         )
 
-    # NOTE: border radius removed (no rx)
+    # NOTE: No border radius for the card (sharp corners)
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="GeeksforGeeks Overview">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -123,7 +129,20 @@ def build_svg(counts: dict) -> str:
 
   <rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" fill="url(#bg)" stroke="#30363D"/>
 
-  <text x="28" y="56" fill="#FFFFFF" font-size="20" font-weight="700"
+  <!-- GFG Logo (simple) -->
+  <circle cx="{logo_cx}" cy="{logo_cy}" r="{logo_r}" fill="{GFG_GREEN}" />
+  <text x="{logo_cx}" y="{logo_cy+6}" text-anchor="middle" fill="#FFFFFF"
+        font-size="14" font-weight="800"
+        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    GFG
+  </text>
+
+  <!-- Username + Brand -->
+  <text x="{header_x}" y="56" fill="#FFFFFF" font-size="18" font-weight="800"
+        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    {esc(USERNAME)}
+  </text>
+  <text x="{header_x}" y="80" fill="{GFG_GREEN}" font-size="16" font-weight="800"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     GeeksforGeeks
   </text>
@@ -131,17 +150,17 @@ def build_svg(counts: dict) -> str:
   <!-- donut background -->
   <circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#21262D" stroke-width="{sw}"/>
 
-  <!-- donut segments -->
+  <!-- donut segments (start from top) -->
   <g transform="rotate(-90 {cx} {cy})">
 {segs}
   </g>
 
   <!-- center numbers -->
-  <text x="{cx}" y="{cy-2}" text-anchor="middle" fill="#FFFFFF" font-size="38" font-weight="800"
+  <text x="{cx}" y="{cy-4}" text-anchor="middle" fill="#FFFFFF" font-size="44" font-weight="900"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     {total}
   </text>
-  <text x="{cx}" y="{cy+26}" text-anchor="middle" fill="#8B949E" font-size="14"
+  <text x="{cx}" y="{cy+30}" text-anchor="middle" fill="#9AA4B2" font-size="16" font-weight="600"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     Problems Solved
   </text>
