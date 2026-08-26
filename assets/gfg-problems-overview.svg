@@ -8,76 +8,65 @@
 
   <rect x="0.5" y="0.5" width="499" height="399" fill="url(#bg)" stroke="#30363D"/>
 
-  <!-- GFG Logo (simple) -->
-  <circle cx="40" cy="52" r="16" fill="#2F8D46" />
-  <text x="40" y="58" text-anchor="middle" fill="#FFFFFF"
-        font-size="14" font-weight="800"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    GFG
-  </text>
+  <!-- Logo -->
+  
+  <image href="data:image/png;base64,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" x="24" y="28" width="30" height="30" />
 
-  <!-- Username + Brand -->
-  <text x="66" y="56" fill="#FFFFFF" font-size="18" font-weight="800"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+  <!-- Username -->
+  <text x="64" y="52" fill="#FFFFFF" font-size="20" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     kamrulhasansojib19
   </text>
-  <text x="66" y="80" fill="#2F8D46" font-size="16" font-weight="800"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+
+  <!-- Brand -->
+  <text x="64" y="78" fill="#2F8D46" font-size="18" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     GeeksforGeeks
   </text>
 
   <!-- donut background -->
-  <circle cx="145" cy="230" r="92" fill="none" stroke="#21262D" stroke-width="22"/>
+  <circle cx="155" cy="245" r="94" fill="none" stroke="#21262D" stroke-width="22"/>
 
-  <!-- donut segments (start from top) -->
-  <g transform="rotate(-90 145 230)">
+  <!-- donut segments -->
+  <g transform="rotate(-90 155 245)">
 
-      <circle cx="145" cy="230" r="92" pathLength="100"
+      <circle cx="155" cy="245" r="94" pathLength="100"
               fill="none" stroke="#CDEB8B" stroke-width="22"
               stroke-dasharray="50.000000 50.000000"
               stroke-dashoffset="-0.000000" />
 
-      <circle cx="145" cy="230" r="92" pathLength="100"
+      <circle cx="155" cy="245" r="94" pathLength="100"
               fill="none" stroke="#8BC34A" stroke-width="22"
               stroke-dasharray="50.000000 50.000000"
               stroke-dashoffset="-50.000000" />
   </g>
 
   <!-- center numbers -->
-  <text x="145" y="226" text-anchor="middle" fill="#FFFFFF" font-size="44" font-weight="900"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+  <text x="155" y="239" text-anchor="middle" fill="#FFFFFF" font-size="50" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     2
   </text>
-  <text x="145" y="260" text-anchor="middle" fill="#9AA4B2" font-size="16" font-weight="600"
-        font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+  <text x="155" y="275" text-anchor="middle" fill="#9AA4B2" font-size="17" font-weight="700" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
     Problems Solved
   </text>
 
   <!-- legend -->
   
-    <rect x="320" y="152" width="16" height="16" rx="2" fill="#7EE7F9"/>
-    <text x="344" y="165" fill="#E6EDF3" font-size="16" font-weight="600"
-          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <rect x="320" y="152" width="16" height="16" fill="#7EE7F9"/>
+    <text x="344" y="165" fill="#E6EDF3" font-size="17" font-weight="700" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       School (0)
     </text>
-    <rect x="320" y="186" width="16" height="16" rx="2" fill="#CDEB8B"/>
-    <text x="344" y="199" fill="#E6EDF3" font-size="16" font-weight="600"
-          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <rect x="320" y="186" width="16" height="16" fill="#CDEB8B"/>
+    <text x="344" y="199" fill="#E6EDF3" font-size="17" font-weight="700" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Basic (1)
     </text>
-    <rect x="320" y="220" width="16" height="16" rx="2" fill="#8BC34A"/>
-    <text x="344" y="233" fill="#E6EDF3" font-size="16" font-weight="600"
-          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <rect x="320" y="220" width="16" height="16" fill="#8BC34A"/>
+    <text x="344" y="233" fill="#E6EDF3" font-size="17" font-weight="700" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Easy (1)
     </text>
-    <rect x="320" y="254" width="16" height="16" rx="2" fill="#FFA726"/>
-    <text x="344" y="267" fill="#E6EDF3" font-size="16" font-weight="600"
-          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <rect x="320" y="254" width="16" height="16" fill="#FFA726"/>
+    <text x="344" y="267" fill="#E6EDF3" font-size="17" font-weight="700" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Medium (0)
     </text>
-    <rect x="320" y="288" width="16" height="16" rx="2" fill="#FF7043"/>
-    <text x="344" y="301" fill="#E6EDF3" font-size="16" font-weight="600"
-          font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
+    <rect x="320" y="288" width="16" height="16" fill="#FF7043"/>
+    <text x="344" y="301" fill="#E6EDF3" font-size="17" font-weight="700" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Hard (0)
     </text>
 </svg>
