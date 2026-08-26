@@ -20,13 +20,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      - name: Install Playwright
         run: |
           python -m pip install --upgrade pip
-          pip install playwright beautifulsoup4
+          pip install playwright
           python -m playwright install --with-deps chromium
 
-      - name: Generate SVG (Playwright)
+      - name: Generate SVG
         env:
           GFG_USERNAME: kamrulhasansojib19
         run: |
