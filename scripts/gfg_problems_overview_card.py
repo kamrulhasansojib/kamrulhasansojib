@@ -1,13 +1,18 @@
 import os
+import re
 import json
 from datetime import datetime, timezone
 
 from playwright.sync_api import sync_playwright
 
 USERNAME = os.environ.get("GFG_USERNAME", "kamrulhasansojib19").strip()
-PROFILE_URL = f"https://www.geeksforgeeks.org/profile/{USERNAME}/"
+PROFILE_URLS = [
+    f"https://www.geeksforgeeks.org/user/{USERNAME}/",
+    f"https://www.geeksforgeeks.org/profile/{USERNAME}/",
+]
 OUT_FILE = "assets/gfg-problems-overview.svg"
 
+ORDER = ["School", "Basic", "Easy", "Medium", "Hard"]
 COLORS = {
     "School": "#7EE7F9",
     "Basic": "#CDEB8B",
@@ -15,38 +20,46 @@ COLORS = {
     "Medium": "#FFA726",
     "Hard": "#FF7043",
 }
-ORDER = ["School", "Basic", "Easy", "Medium", "Hard"]
 
 
 def deep_find_counts(obj):
+    """__NEXT_DATA__ JSON থেকে counts খোঁজার fallback"""
     if isinstance(obj, dict):
-        lower_keys = {str(k).lower(): k for k in obj.keys()}
-        need = ["school", "basic", "easy", "medium", "hard"]
-        if all(k in lower_keys for k in need):
+        lower = {str(k).lower(): k for k in obj.keys()}
+        if all(k in lower for k in ["school", "basic", "easy", "medium", "hard"]):
             try:
                 counts = {
-                    "School": int(obj[lower_keys["school"]]),
-                    "Basic": int(obj[lower_keys["basic"]]),
-                    "Easy": int(obj[lower_keys["easy"]]),
-                    "Medium": int(obj[lower_keys["medium"]]),
-                    "Hard": int(obj[lower_keys["hard"]]),
+                    "School": int(obj[lower["school"]]),
+                    "Basic": int(obj[lower["basic"]]),
+                    "Easy": int(obj[lower["easy"]]),
+                    "Medium": int(obj[lower["medium"]]),
+                    "Hard": int(obj[lower["hard"]]),
                 }
                 if all(v >= 0 for v in counts.values()):
                     return counts
             except Exception:
                 pass
-
         for v in obj.values():
-            found = deep_find_counts(v)
-            if found:
-                return found
-
+            f = deep_find_counts(v)
+            if f:
+                return f
     if isinstance(obj, list):
         for it in obj:
-            found = deep_find_counts(it)
-            if found:
-                return found
+            f = deep_find_counts(it)
+            if f:
+                return f
+    return None
 
+
+def parse_rendered_text(text: str):
+    """Rendered page থেকে 'School (0) Basic (1) ...' প্যাটার্ন খোঁজা"""
+    counts = {}
+    for name in ORDER:
+        m = re.search(rf"{name}\s*\(\s*(\d+)\s*\)", text, flags=re.IGNORECASE)
+        if m:
+            counts[name] = int(m.group(1))
+    if len(counts) == len(ORDER):
+        return {k: counts[k] for k in ORDER}
     return None
 
 
@@ -65,9 +78,7 @@ def donut_segments(counts):
     total = sum(counts.values())
     if total <= 0:
         return "", total
-
-    segs = []
-    offset = 0.0
+    segs, offset = [], 0.0
     for name in ORDER:
         val = counts.get(name, 0)
         if val <= 0:
@@ -77,7 +88,6 @@ def donut_segments(counts):
             f'''
       <circle cx="140" cy="120" r="72" pathLength="100"
               fill="none" stroke="{COLORS[name]}" stroke-width="18"
-              stroke-linecap="butt"
               stroke-dasharray="{pct:.6f} {100.0 - pct:.6f}"
               stroke-dashoffset="{-offset:.6f}" />'''
         )
@@ -118,7 +128,7 @@ def build_svg(counts):
     Problems Overview
   </text>
 
-  <circle cx="140" cy="120" r="72" fill="none" stroke="#21262D" stroke-width="18" />
+  <circle cx="140" cy="120" r="72" fill="none" stroke="#21262D" stroke-width="18"/>
 
   <g transform="rotate(-90 140 120)">
 {segments if segments else ""}
@@ -144,27 +154,55 @@ def build_svg(counts):
 
 
 def main():
+    counts = None
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+        ctx = browser.new_context(
+            user_agent=(
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+            ),
+            viewport={"width": 1280, "height": 900},
+        )
+        page = ctx.new_page()
 
-        page.goto(PROFILE_URL, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(5000)
+        for url in PROFILE_URLS:
+            try:
+                page.goto(url, wait_until="networkidle", timeout=60000)
+            except Exception:
+                page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(6000)
 
-        # Read Next.js data
-        next_data = page.eval_on_selector("script#__NEXT_DATA__", "el => el.textContent")
+            rendered = page.inner_text("body")
+            print("PAGE URL:", page.url)
+            print("PAGE TEXT SNIPPET:", " ".join(rendered.split())[:300])
+
+            counts = parse_rendered_text(rendered)
+            if counts:
+                break
+
+            try:
+                nd = page.eval_on_selector(
+                    "script#__NEXT_DATA__", "el => el.textContent"
+                )
+                if nd:
+                    counts = deep_find_counts(json.loads(nd))
+                    if counts:
+                        break
+            except Exception:
+                pass
+
         browser.close()
 
-    data = json.loads(next_data) if next_data else {}
-    counts = deep_find_counts(data) or {k: 0 for k in ORDER}
+    if not counts:
+        counts = {k: 0 for k in ORDER}
 
     print("Counts:", counts, "Total:", sum(counts.values()))
 
-    svg = build_svg(counts)
     os.makedirs("assets", exist_ok=True)
     with open(OUT_FILE, "w", encoding="utf-8") as f:
-        f.write(svg)
-
+        f.write(build_svg(counts))
     print("Generated:", OUT_FILE)
 
 
