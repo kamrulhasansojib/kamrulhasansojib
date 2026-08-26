@@ -54,9 +54,10 @@
           font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
       Hard (0)
     </text>
+  <text x="32" y="214" fill="#FFB86C" font-size="11" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">Data not visible in GitHub Actions (likely login/anti-bot). Add cookies secret.</text>
 
   <text x="32" y="236" fill="#8B949E" font-size="11"
         font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu">
-    Source: geeksforgeeks.org • Updated: 2026-08-26 16:48 UTC • User: kamrulhasansojib19
+    Source: geeksforgeeks.org • Updated: 2026-08-26 16:55 UTC • User: kamrulhasansojib19
   </text>
 </svg>
