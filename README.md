@@ -65,7 +65,7 @@
     <!-- <td align="center">
       <img src="https://codeforces-readme-stats.vercel.app/api/card?username=kamrul_hasan_sojib_&theme=react&border_radius=10&height=390" width="405"/>
     </td> -->
-    <td align="center" valign="top">
+    <td align="center">
       <a href="https://www.geeksforgeeks.org/profile/kamrulhasansojib19/" target="_blank">
         <img src="./assets/gfg-problems-overview.svg"
              width="405" alt="GeeksforGeeks Problems Overview"/>
