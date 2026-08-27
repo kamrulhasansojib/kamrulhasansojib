@@ -70,7 +70,6 @@ def parse_name_handle(text: str):
 
 
 def parse_dsa_block(text: str):
-    # Prefer: "DSA ... Easy 5 ... Medium 1 ... Hard 0"
     m = re.search(
         r"DSA.*?Easy\D{0,20}(\d+).*?Medium\D{0,20}(\d+).*?Hard\D{0,20}(\d+)",
         text,
@@ -113,8 +112,8 @@ def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: in
 def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str | None):
     W, H = 500, 400
 
-    # Outer card rounded like your screenshot
-    outer_rx = 18
+    # ✅ OUTER BORDER RADIUS REMOVED (LeetCode-like)
+    outer_rx = 0
 
     qs_text = qs if qs is not None else "N/A"
     ad_text = ad if ad is not None else "N/A"
@@ -146,13 +145,12 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
     gap = 20
 
     # ---- DSA layout (NO container background/border) ----
-    # Moved UP + more bottom gap
     dsa_title_x = 40
-    dsa_title_y = 226  # was 242
+    dsa_title_y = 226
 
-    # Donut (left) moved UP
+    # Donut (left)
     donut_cx = 120
-    donut_cy = 302      # was 320
+    donut_cy = 302
     donut_r = 56
     donut_sw = 14
 
@@ -164,12 +162,12 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
         cx=donut_cx, cy=donut_cy, r=donut_r, sw=donut_sw
     )
 
-    # Rows (right) moved UP, bottom gap increased
+    # Rows (right)
     row_x = 260
     row_w = 216
     row_h = 34
     row_gap = 10
-    row_y0 = 242  # was 258
+    row_y0 = 242
 
     def row(y, label, color, value):
         return f"""
@@ -248,7 +246,6 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 def main():
     os.makedirs("assets", exist_ok=True)
 
-    # Codolio stats are JS-loaded -> render with Playwright
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
