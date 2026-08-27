@@ -70,7 +70,6 @@ def parse_name_handle(text: str):
 
 
 def parse_dsa_block(text: str):
-    # Prefer: "DSA ... Easy 5 ... Medium 1 ... Hard 0"
     m = re.search(
         r"DSA.*?Easy\D{0,20}(\d+).*?Medium\D{0,20}(\d+).*?Hard\D{0,20}(\d+)",
         text,
@@ -79,7 +78,6 @@ def parse_dsa_block(text: str):
     if m:
         return int(m.group(1)), int(m.group(2)), int(m.group(3))
 
-    # fallback: anywhere
     def any_diff(name: str):
         mm = re.search(rf"\b{name}\b\D{{0,15}}(\d+)", text, flags=re.IGNORECASE)
         return int(mm.group(1)) if mm else None
@@ -112,9 +110,8 @@ def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: in
 
 
 def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str | None):
-    # Fixed canvas (same ratio like your other cards)
     W, H = 500, 400
-    rx = 0  # sharp outer corners
+    rx = 0  # outer sharp corner
 
     qs_text = qs if qs is not None else "N/A"
     ad_text = ad if ad is not None else "N/A"
@@ -127,7 +124,6 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
     med_v = 0 if medium is None else int(medium)
     hard_v = 0 if hard is None else int(hard)
 
-    # Header logo
     if logo_uri:
         logo = f'<image href="{logo_uri}" x="24" y="22" width="30" height="30" />'
     else:
@@ -138,21 +134,22 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 
     hx = 64
 
-    # Top stat boxes (slightly higher to give DSA more space)
+    # Top stat boxes
     box_y = 92
     box_w = 216
     box_h = 92
     gap = 20
 
-    # DSA section (ensure it stays inside 500x400)
+    # DSA container
     dsa_x = 24
     dsa_y = 198
     dsa_w = 452
-    dsa_h = 178  # bottom = 376 (safe)
+    dsa_h = 178
+    dsa_rx = 16  # inner box round like screenshot
 
-    # Donut (left)
-    donut_cx = dsa_x + 96
-    donut_cy = dsa_y + 110
+    # Donut (left inside DSA)
+    donut_cx = dsa_x + 100
+    donut_cy = dsa_y + 112
     donut_r = 56
     donut_sw = 14
 
@@ -164,25 +161,28 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
         cx=donut_cx, cy=donut_cy, r=donut_r, sw=donut_sw
     )
 
-    # Right rows (fixed width so never overflows)
-    row_x = dsa_x + 210
-    row_w = dsa_x + dsa_w - row_x - 18  # always inside
+    # Right rows inside DSA
+    row_x = dsa_x + 230
+    row_w = (dsa_x + dsa_w) - row_x - 20
     row_h = 34
     row_gap = 12
-    row_y0 = dsa_y + 64
+    row_y0 = dsa_y + 60
 
     def row(y, label, color, value):
         return f"""
-  <rect x="{row_x}" y="{y}" width="{row_w}" height="{row_h}" rx="10" fill="{BOX_BG}" stroke="{BORDER}"/>
-  <text x="{row_x + 14}" y="{y + 23}" fill="{color}" font-size="16" font-weight="900" font-family="{FONT}">{label}</text>
-  <text x="{row_x + row_w - 14}" y="{y + 23}" text-anchor="end" fill="{TEXT}" font-size="16" font-weight="900" font-family="{FONT}">{esc(value)}</text>
-"""
+      <rect x="{row_x}" y="{y}" width="{row_w}" height="{row_h}" rx="10" fill="{BOX_BG}" stroke="{BORDER}"/>
+      <text x="{row_x + 14}" y="{y + 23}" fill="{color}" font-size="16" font-weight="900" font-family="{FONT}">{label}</text>
+      <text x="{row_x + row_w - 14}" y="{y + 23}" text-anchor="end" fill="{TEXT}" font-size="16" font-weight="900" font-family="{FONT}">{esc(value)}</text>
+    """
 
-    # Header 2nd line: "Codolio - @sojib19"
+    # One-line brand
     brand_line = f"""<text x="{hx}" y="74" font-size="16" font-weight="900" font-family="{FONT}">
-    <tspan fill="{ACCENT}">Codolio</tspan>
-    <tspan fill="{MUTED}"> - @{esc(username)}</tspan>
-  </text>"""
+      <tspan fill="{ACCENT}">Codolio</tspan>
+      <tspan fill="{MUTED}"> - @{esc(username)}</tspan>
+    </text>"""
+
+    # ClipPath so NOTHING can go outside the DSA box
+    clip_id = "clip_dsa"
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Codolio Card">
   <defs>
@@ -190,6 +190,10 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
       <stop offset="0%" stop-color="{BG1}"/>
       <stop offset="100%" stop-color="{BG2}"/>
     </linearGradient>
+
+    <clipPath id="{clip_id}">
+      <rect x="{dsa_x}" y="{dsa_y}" width="{dsa_w}" height="{dsa_h}" rx="{dsa_rx}"/>
+    </clipPath>
   </defs>
 
   <rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="{rx}" fill="url(#bg)" stroke="{BORDER}"/>
@@ -219,29 +223,37 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
     {esc(ad_text)}
   </text>
 
-  <!-- DSA container -->
-  <rect x="{dsa_x}" y="{dsa_y}" width="{dsa_w}" height="{dsa_h}" rx="14" fill="rgba(0,0,0,0)" stroke="{BORDER}"/>
+  <!-- DSA container (visible box) -->
+  <rect x="{dsa_x}" y="{dsa_y}" width="{dsa_w}" height="{dsa_h}" rx="{dsa_rx}" fill="rgba(0,0,0,0)" stroke="{BORDER}"/>
   <text x="{dsa_x + 18}" y="{dsa_y + 34}" fill="{TEXT}" font-size="18" font-weight="900" font-family="{FONT}">
     DSA Distribution
   </text>
 
-  <!-- Left donut -->
-  <circle cx="{donut_cx}" cy="{donut_cy}" r="{donut_r}" fill="none" stroke="#21262D" stroke-width="{donut_sw}"/>
-  <g transform="rotate(-90 {donut_cx} {donut_cy})">
+  <!-- Everything below is CLIPPED inside DSA box -->
+  <g clip-path="url(#{clip_id})">
+
+    <!-- Donut bg -->
+    <circle cx="{donut_cx}" cy="{donut_cy}" r="{donut_r}" fill="none" stroke="#21262D" stroke-width="{donut_sw}"/>
+
+    <!-- Donut segments -->
+    <g transform="rotate(-90 {donut_cx} {donut_cy})">
 {segs}
+    </g>
+
+    <!-- Center text -->
+    <text x="{donut_cx}" y="{donut_cy + 8}" text-anchor="middle" fill="{TEXT}" font-size="30" font-weight="900" font-family="{FONT}">
+      {total}
+    </text>
+    <text x="{donut_cx}" y="{donut_cy + 30}" text-anchor="middle" fill="{MUTED}" font-size="12" font-weight="800" font-family="{FONT}">
+      Solved
+    </text>
+
+    <!-- Right rows -->
+    {row(row_y0 + 0*(row_h+row_gap), "Easy", GREEN, easy_text)}
+    {row(row_y0 + 1*(row_h+row_gap), "Medium", ORANGE, medium_text)}
+    {row(row_y0 + 2*(row_h+row_gap), "Hard", RED, hard_text)}
+
   </g>
-
-  <text x="{donut_cx}" y="{donut_cy + 8}" text-anchor="middle" fill="{TEXT}" font-size="30" font-weight="900" font-family="{FONT}">
-    {total}
-  </text>
-  <text x="{donut_cx}" y="{donut_cy + 30}" text-anchor="middle" fill="{MUTED}" font-size="12" font-weight="800" font-family="{FONT}">
-    Solved
-  </text>
-
-  <!-- Right rows -->
-  {row(row_y0 + 0*(row_h+row_gap), "Easy", GREEN, easy_text)}
-  {row(row_y0 + 1*(row_h+row_gap), "Medium", ORANGE, medium_text)}
-  {row(row_y0 + 2*(row_h+row_gap), "Hard", RED, hard_text)}
 </svg>
 """
 
@@ -249,7 +261,6 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 def main():
     os.makedirs("assets", exist_ok=True)
 
-    # Codolio stats are JS-loaded -> render with Playwright
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
