@@ -4,6 +4,7 @@ import base64
 import requests
 from playwright.sync_api import sync_playwright
 
+# ===== Config =====
 HANDLE = (os.environ.get("CODOLIO_HANDLE") or "sojib19").strip()
 PROFILE_URL = f"https://codolio.com/profile/{HANDLE}"
 OUT_FILE = "assets/codolio-card.svg"
@@ -50,24 +51,9 @@ def fetch_logo_data_uri(url: str) -> str | None:
 
 
 def find_stat_int(text: str, label: str) -> int | None:
+    # e.g. "Questions Solved 45" or "Questions Solved: 45"
     m = re.search(rf"{re.escape(label)}\s*[:\-]?\s*(\d+)", text, flags=re.IGNORECASE)
     return int(m.group(1)) if m else None
-
-
-def parse_dsa_block(text: str):
-    """
-    Prefer extracting from the DSA block to avoid wrong Easy/Medium/Hard matches.
-    Tries to match:
-      DSA ... Easy 5 ... Medium 1 ... Hard 0
-    """
-    m = re.search(
-        r"DSA.*?(Easy)\s*\(?\s*(\d+)\s*\)?.*?(Medium)\s*\(?\s*(\d+)\s*\)?.*?(Hard)\s*\(?\s*(\d+)\s*\)?",
-        text,
-        flags=re.IGNORECASE | re.DOTALL,
-    )
-    if m:
-        return int(m.group(2)), int(m.group(4)), int(m.group(6))
-    return None, None, None
 
 
 def parse_name_handle(text: str):
@@ -81,18 +67,44 @@ def parse_name_handle(text: str):
             if i > 0:
                 display_name = lines[i - 1]
             break
+
     return display_name, username
 
 
+def parse_dsa_block(text: str):
+    """
+    Try to capture Easy/Medium/Hard from DSA section.
+    Works for patterns like:
+      DSA ... Easy 5 ... Medium 1 ... Hard 0
+    """
+    m = re.search(
+        r"DSA.*?Easy\D{0,20}(\d+).*?Medium\D{0,20}(\d+).*?Hard\D{0,20}(\d+)",
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if m:
+        return int(m.group(1)), int(m.group(2)), int(m.group(3))
+
+    # fallback: try anywhere (less reliable)
+    def any_diff(name: str):
+        mm = re.search(rf"\b{name}\b\D{{0,15}}(\d+)", text, flags=re.IGNORECASE)
+        return int(mm.group(1)) if mm else None
+
+    e = any_diff("Easy")
+    md = any_diff("Medium")
+    h = any_diff("Hard")
+    return e, md, h
+
+
 def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: int, r: int, sw: int):
-    total = sum(values.get(k, 0) for k in order)
+    total = sum(int(values.get(k, 0) or 0) for k in order)
     if total <= 0:
         return "", 0
 
     segs = []
     offset = 0.0
     for k in order:
-        v = values.get(k, 0)
+        v = int(values.get(k, 0) or 0)
         if v <= 0:
             continue
         pct = (v / total) * 100.0
@@ -110,16 +122,20 @@ def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: in
 
 def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str | None):
     W, H = 500, 400
-    rx = 0  # sharp
+    rx = 0  # sharp corners
 
     qs_text = qs if qs is not None else "N/A"
     ad_text = ad if ad is not None else "N/A"
 
-    easy_v = 0 if easy is None else easy
-    med_v = 0 if medium is None else medium
-    hard_v = 0 if hard is None else hard
+    easy_text = easy if easy is not None else "N/A"
+    medium_text = medium if medium is not None else "N/A"
+    hard_text = hard if hard is not None else "N/A"
 
-    # Header
+    easy_v = 0 if easy is None else int(easy)
+    med_v = 0 if medium is None else int(medium)
+    hard_v = 0 if hard is None else int(hard)
+
+    # Header logo
     if logo_uri:
         logo = f'<image href="{logo_uri}" x="24" y="22" width="30" height="30" />'
     else:
@@ -142,12 +158,9 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
     dsa_w = 452
     dsa_h = 166
 
-    left_w = 190
-    right_x = dsa_x + left_w + 18  # spacing between columns
-
-    # Donut geometry (left)
+    # Left donut
     donut_cx = dsa_x + 95
-    donut_cy = dsa_y + 100
+    donut_cy = dsa_y + 102
     donut_r = 54
     donut_sw = 14
 
@@ -160,6 +173,7 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
     )
 
     # Right rows
+    right_x = dsa_x + 190 + 18
     row_x = right_x
     row_w = dsa_x + dsa_w - row_x - 18
     row_h = 34
@@ -237,9 +251,9 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
   </text>
 
   <!-- Right rows -->
-  {row(row_y0 + 0*(row_h+row_gap), "Easy", GREEN, easy_text if (easy:=easy) is not None else "N/A")}
-  {row(row_y0 + 1*(row_h+row_gap), "Medium", ORANGE, medium_text if (medium_text:=medium) is not None else "N/A")}
-  {row(row_y0 + 2*(row_h+row_gap), "Hard", RED, hard_text if (hard_text:=hard) is not None else "N/A")}
+  {row(row_y0 + 0*(row_h+row_gap), "Easy", GREEN, easy_text)}
+  {row(row_y0 + 1*(row_h+row_gap), "Medium", ORANGE, medium_text)}
+  {row(row_y0 + 2*(row_h+row_gap), "Hard", RED, hard_text)}
 </svg>
 """
 
@@ -247,6 +261,7 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 def main():
     os.makedirs("assets", exist_ok=True)
 
+    # Render page (Codolio stats are JS-loaded)
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
@@ -258,7 +273,6 @@ def main():
     display_name, username = parse_name_handle(text)
     qs = find_stat_int(text, "Questions Solved")
     ad = find_stat_int(text, "Active Days")
-
     easy, medium, hard = parse_dsa_block(text)
 
     print("Parsed:", {
