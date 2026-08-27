@@ -63,7 +63,11 @@
    &nbsp;&nbsp;&nbsp;&nbsp;
  <img src="./assets/codolio-card.svg" width="405" alt="Codolio Card" />
      &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./assets/gfg-problems-overview.svg" width="405" alt="GeeksforGeeks Problems Overview"/>
+  <!-- <img src="https://codeforces-readme-stats.vercel.app/api/card?username=kamrul_hasan_sojib_&theme=github_dark&border_color=58A6FF"
+     width="410" alt="Codeforces Stats" />
+       &nbsp;&nbsp;&nbsp;
+  <img src="./assets/gfg-problems-overview.svg"  width="410"alt="GeeksforGeeks Problems Overview"/> -->
+    
 </p>
 
 <p align="center">
