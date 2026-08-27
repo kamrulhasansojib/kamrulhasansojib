@@ -4,6 +4,10 @@
       <stop offset="0%" stop-color="#0D1117"/>
       <stop offset="100%" stop-color="#0B1220"/>
     </linearGradient>
+
+    <clipPath id="clip_dsa">
+      <rect x="24" y="198" width="452" height="178" rx="16"/>
+    </clipPath>
   </defs>
 
   <rect x="0.5" y="0.5" width="499" height="399" rx="0" fill="url(#bg)" stroke="#30363D"/>
@@ -14,9 +18,9 @@
     Kamrul Hasan Sojib
   </text>
   <text x="64" y="74" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">
-    <tspan fill="#22C55E">Codolio</tspan>
-    <tspan fill="#9AA4B2"> - @sojib19</tspan>
-  </text>
+      <tspan fill="#22C55E">Codolio</tspan>
+      <tspan fill="#9AA4B2"> - @sojib19</tspan>
+    </text>
 
   <!-- Stat boxes -->
   <rect x="24" y="92" width="216" height="92" rx="12" fill="#0B1220" stroke="#30363D"/>
@@ -36,48 +40,56 @@
     6
   </text>
 
-  <!-- DSA container -->
-  <rect x="24" y="198" width="452" height="178" rx="14" fill="rgba(0,0,0,0)" stroke="#30363D"/>
+  <!-- DSA container (visible box) -->
+  <rect x="24" y="198" width="452" height="178" rx="16" fill="rgba(0,0,0,0)" stroke="#30363D"/>
   <text x="42" y="232" fill="#E6EDF3" font-size="18" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">
     DSA Distribution
   </text>
 
-  <!-- Left donut -->
-  <circle cx="120" cy="308" r="56" fill="none" stroke="#21262D" stroke-width="14"/>
-  <g transform="rotate(-90 120 308)">
+  <!-- Everything below is CLIPPED inside DSA box -->
+  <g clip-path="url(#clip_dsa)">
 
-      <circle cx="120" cy="308" r="56" pathLength="100"
+    <!-- Donut bg -->
+    <circle cx="124" cy="310" r="56" fill="none" stroke="#21262D" stroke-width="14"/>
+
+    <!-- Donut segments -->
+    <g transform="rotate(-90 124 310)">
+
+      <circle cx="124" cy="310" r="56" pathLength="100"
               fill="none" stroke="#22C55E" stroke-width="14"
               stroke-dasharray="83.333333 16.666667"
               stroke-dashoffset="-0.000000" />
 
-      <circle cx="120" cy="308" r="56" pathLength="100"
+      <circle cx="124" cy="310" r="56" pathLength="100"
               fill="none" stroke="#F59E0B" stroke-width="14"
               stroke-dasharray="16.666667 83.333333"
               stroke-dashoffset="-83.333333" />
+    </g>
+
+    <!-- Center text -->
+    <text x="124" y="318" text-anchor="middle" fill="#E6EDF3" font-size="30" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">
+      6
+    </text>
+    <text x="124" y="340" text-anchor="middle" fill="#9AA4B2" font-size="12" font-weight="800" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">
+      Solved
+    </text>
+
+    <!-- Right rows -->
+    
+      <rect x="254" y="258" width="202" height="34" rx="10" fill="#0B1220" stroke="#30363D"/>
+      <text x="268" y="281" fill="#22C55E" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">Easy</text>
+      <text x="442" y="281" text-anchor="end" fill="#E6EDF3" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">5</text>
+    
+    
+      <rect x="254" y="304" width="202" height="34" rx="10" fill="#0B1220" stroke="#30363D"/>
+      <text x="268" y="327" fill="#F59E0B" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">Medium</text>
+      <text x="442" y="327" text-anchor="end" fill="#E6EDF3" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">1</text>
+    
+    
+      <rect x="254" y="350" width="202" height="34" rx="10" fill="#0B1220" stroke="#30363D"/>
+      <text x="268" y="373" fill="#EF4444" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">Hard</text>
+      <text x="442" y="373" text-anchor="end" fill="#E6EDF3" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">0</text>
+    
+
   </g>
-
-  <text x="120" y="316" text-anchor="middle" fill="#E6EDF3" font-size="30" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">
-    6
-  </text>
-  <text x="120" y="338" text-anchor="middle" fill="#9AA4B2" font-size="12" font-weight="800" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">
-    Solved
-  </text>
-
-  <!-- Right rows -->
-  
-  <rect x="234" y="262" width="224" height="34" rx="10" fill="#0B1220" stroke="#30363D"/>
-  <text x="248" y="285" fill="#22C55E" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">Easy</text>
-  <text x="444" y="285" text-anchor="end" fill="#E6EDF3" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">5</text>
-
-  
-  <rect x="234" y="308" width="224" height="34" rx="10" fill="#0B1220" stroke="#30363D"/>
-  <text x="248" y="331" fill="#F59E0B" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">Medium</text>
-  <text x="444" y="331" text-anchor="end" fill="#E6EDF3" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">1</text>
-
-  
-  <rect x="234" y="354" width="224" height="34" rx="10" fill="#0B1220" stroke="#30363D"/>
-  <text x="248" y="377" fill="#EF4444" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">Hard</text>
-  <text x="444" y="377" text-anchor="end" fill="#E6EDF3" font-size="16" font-weight="900" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial">0</text>
-
 </svg>
