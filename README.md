@@ -61,7 +61,7 @@
 <p align="center">
   <img src="https://leetcard.jacoblin.cool/kamrul_hasan_sojib?theme=dark&font=Roboto&ext=activity" width="405" alt="LeetCode Badge"/>
    &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./assets/codolio-card.svg" width="405" alt="Codolio Card" />
+ <img src="./assets/codolio-card.svg" width="405" alt="Codolio Card" />
      &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./assets/gfg-problems-overview.svg" width="405" alt="GeeksforGeeks Problems Overview"/>
 </p>
