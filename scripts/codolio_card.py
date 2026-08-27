@@ -111,10 +111,9 @@ def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: in
 
 
 def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str | None):
-    # Same ratio as your other cards
     W, H = 500, 400
 
-    # Outer card rounded like screenshot
+    # Outer card rounded like your screenshot
     outer_rx = 18
 
     qs_text = qs if qs is not None else "N/A"
@@ -137,7 +136,7 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
             f'<text x="39" y="44" text-anchor="middle" fill="#0D1117" font-size="14" font-weight="900" font-family="{FONT}">C</text>'
         )
 
-    # Header text positions
+    # Header positions
     hx = 64
 
     # Top stat boxes
@@ -146,14 +145,14 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
     box_h = 92
     gap = 20
 
-    # --- DSA layout WITHOUT container box/border ---
-    # Title
+    # ---- DSA layout (NO container background/border) ----
+    # Moved UP + more bottom gap
     dsa_title_x = 40
-    dsa_title_y = 242
+    dsa_title_y = 226  # was 242
 
-    # Donut (left)
+    # Donut (left) moved UP
     donut_cx = 120
-    donut_cy = 320
+    donut_cy = 302      # was 320
     donut_r = 56
     donut_sw = 14
 
@@ -165,12 +164,12 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
         cx=donut_cx, cy=donut_cy, r=donut_r, sw=donut_sw
     )
 
-    # Rows (right) — keep inside with bottom gap
+    # Rows (right) moved UP, bottom gap increased
     row_x = 260
     row_w = 216
     row_h = 34
     row_gap = 10
-    row_y0 = 258  # last row bottom stays away from border
+    row_y0 = 242  # was 258
 
     def row(y, label, color, value):
         return f"""
