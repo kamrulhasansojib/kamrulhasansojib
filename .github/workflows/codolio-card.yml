@@ -3,7 +3,7 @@ name: Generate Codolio Card
 on:
   workflow_dispatch:
   schedule:
-    - cron: "45 3 * * *"  # daily
+    - cron: "45 3 * * *"
 
 permissions:
   contents: write
