@@ -15,9 +15,10 @@ TEXT = "#E6EDF3"
 MUTED = "#9AA4B2"
 ACCENT = "#22C55E"
 
-ORANGE = "#F59E0B"
-RED = "#EF4444"
-GREEN = "#22C55E"
+GREEN = "#22C55E"   # Easy
+ORANGE = "#F59E0B"  # Medium
+RED = "#EF4444"     # Hard
+BOX_BG = "#0B1220"
 
 CODOLIO_LOGO_URL = "https://codolio.com/favicon.ico"
 
@@ -49,46 +50,30 @@ def fetch_logo_data_uri(url: str) -> str | None:
 
 
 def find_stat_int(text: str, label: str) -> int | None:
-    """
-    Finds: 'Questions Solved 43' or 'Questions Solved: 43'
-    """
     m = re.search(rf"{re.escape(label)}\s*[:\-]?\s*(\d+)", text, flags=re.IGNORECASE)
     return int(m.group(1)) if m else None
 
 
-def find_difficulty(text: str, name: str) -> int | None:
+def parse_dsa_block(text: str):
     """
-    Prefer line-based exact matches:
-      Easy 5
-      Medium 1
-      Hard 0
+    Prefer extracting from the DSA block to avoid wrong Easy/Medium/Hard matches.
+    Tries to match:
+      DSA ... Easy 5 ... Medium 1 ... Hard 0
     """
-    # line based
-    for line in text.splitlines():
-        line = line.strip()
-        m = re.match(rf"^{re.escape(name)}\s*\(?\s*(\d+)\s*\)?$", line, flags=re.IGNORECASE)
-        if m:
-            return int(m.group(1))
-
-    # fallback any-where match (less strict)
-    m = re.search(rf"\b{re.escape(name)}\b\D{{0,10}}(\d+)", text, flags=re.IGNORECASE)
-    return int(m.group(1)) if m else None
+    m = re.search(
+        r"DSA.*?(Easy)\s*\(?\s*(\d+)\s*\)?.*?(Medium)\s*\(?\s*(\d+)\s*\)?.*?(Hard)\s*\(?\s*(\d+)\s*\)?",
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if m:
+        return int(m.group(2)), int(m.group(4)), int(m.group(6))
+    return None, None, None
 
 
-def parse_from_rendered_text(text: str):
-    # Basic profile stats
-    qs = find_stat_int(text, "Questions Solved")
-    ad = find_stat_int(text, "Active Days")
-
-    easy = find_difficulty(text, "Easy")
-    medium = find_difficulty(text, "Medium")
-    hard = find_difficulty(text, "Hard")
-
-    # Name + @handle (best-effort)
+def parse_name_handle(text: str):
     display_name = HANDLE
     username = HANDLE
 
-    # if '@sojib19' exists, try use previous non-empty line as name
     lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
     for i, ln in enumerate(lines):
         if re.fullmatch(rf"@{re.escape(HANDLE)}", ln):
@@ -96,58 +81,96 @@ def parse_from_rendered_text(text: str):
             if i > 0:
                 display_name = lines[i - 1]
             break
+    return display_name, username
 
-    return display_name, username, qs, ad, easy, medium, hard
+
+def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: int, r: int, sw: int):
+    total = sum(values.get(k, 0) for k in order)
+    if total <= 0:
+        return "", 0
+
+    segs = []
+    offset = 0.0
+    for k in order:
+        v = values.get(k, 0)
+        if v <= 0:
+            continue
+        pct = (v / total) * 100.0
+        segs.append(
+            f'''
+      <circle cx="{cx}" cy="{cy}" r="{r}" pathLength="100"
+              fill="none" stroke="{colors[k]}" stroke-width="{sw}"
+              stroke-dasharray="{pct:.6f} {100.0 - pct:.6f}"
+              stroke-dashoffset="{-offset:.6f}" />'''
+        )
+        offset += pct
+
+    return "\n".join(segs), total
 
 
-def build_svg(display_name: str, username: str, qs, ad, easy, medium, hard, logo_uri: str | None):
+def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str | None):
     W, H = 500, 400
-    rx = 0  # sharp corners to match your other cards
+    rx = 0  # sharp
 
     qs_text = qs if qs is not None else "N/A"
     ad_text = ad if ad is not None else "N/A"
 
-    easy_text = easy if easy is not None else "N/A"
-    med_text = medium if medium is not None else "N/A"
-    hard_text = hard if hard is not None else "N/A"
+    easy_v = 0 if easy is None else easy
+    med_v = 0 if medium is None else medium
+    hard_v = 0 if hard is None else hard
 
+    # Header
     if logo_uri:
-        logo = f'<image href="{logo_uri}" x="24" y="24" width="30" height="30" />'
+        logo = f'<image href="{logo_uri}" x="24" y="22" width="30" height="30" />'
     else:
         logo = (
-            f'<rect x="24" y="24" width="30" height="30" fill="{ACCENT}"/>'
-            f'<text x="39" y="45" text-anchor="middle" fill="#0D1117" '
-            f'font-size="14" font-weight="900" font-family="{FONT}">C</text>'
+            f'<rect x="24" y="22" width="30" height="30" fill="{ACCENT}"/>'
+            f'<text x="39" y="44" text-anchor="middle" fill="#0D1117" font-size="14" font-weight="900" font-family="{FONT}">C</text>'
         )
 
-    # Layout positions
-    # Header
     hx = 64
 
-    # Stat boxes
+    # Top stat boxes
     box_y = 96
-    box_h = 92
     box_w = 216
-    box_gap = 20
+    box_h = 92
+    gap = 20
 
-    # DSA distribution container
+    # DSA section (two columns)
     dsa_x = 24
-    dsa_y = 208
+    dsa_y = 210
     dsa_w = 452
-    dsa_h = 168
+    dsa_h = 166
 
-    # Row style
-    row_x = dsa_x + 18
-    row_w = dsa_w - 36
+    left_w = 190
+    right_x = dsa_x + left_w + 18  # spacing between columns
+
+    # Donut geometry (left)
+    donut_cx = dsa_x + 95
+    donut_cy = dsa_y + 100
+    donut_r = 54
+    donut_sw = 14
+
+    dsa_vals = {"Easy": easy_v, "Medium": med_v, "Hard": hard_v}
+    segs, total = donut_segments(
+        dsa_vals,
+        order=["Easy", "Medium", "Hard"],
+        colors={"Easy": GREEN, "Medium": ORANGE, "Hard": RED},
+        cx=donut_cx, cy=donut_cy, r=donut_r, sw=donut_sw
+    )
+
+    # Right rows
+    row_x = right_x
+    row_w = dsa_x + dsa_w - row_x - 18
     row_h = 34
     row_gap = 12
-    row_y0 = dsa_y + 52
+    row_y0 = dsa_y + 56
 
-    def dsa_row(y, label, color, value):
+    def row(y, label, color, value):
         return f"""
-  <rect x="{row_x}" y="{y}" width="{row_w}" height="{row_h}" rx="10" fill="#0B1220" stroke="{BORDER}"/>
-  <text x="{row_x + 16}" y="{y + 23}" fill="{color}" font-size="16" font-weight="900" font-family="{FONT}">{label}</text>
-  <text x="{row_x + row_w - 16}" y="{y + 23}" text-anchor="end" fill="{TEXT}" font-size="16" font-weight="900" font-family="{FONT}">{esc(value)}</text>
+  <rect x="{row_x}" y="{y}" width="{row_w}" height="{row_h}" rx="10" fill="{BOX_BG}" stroke="{BORDER}"/>
+  <text x="{row_x + 14}" y="{y + 23}" fill="{color}" font-size="16" font-weight="900" font-family="{FONT}">{label}</text>
+  <text x="{row_x + row_w - 14}" y="{y + 23}" text-anchor="end" fill="{TEXT}" font-size="16" font-weight="900" font-family="{FONT}">{esc(value)}</text>
 """
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Codolio Card">
@@ -173,8 +196,8 @@ def build_svg(display_name: str, username: str, qs, ad, easy, medium, hard, logo
   </text>
 
   <!-- Stat boxes -->
-  <rect x="24" y="{box_y}" width="{box_w}" height="{box_h}" rx="12" fill="#0B1220" stroke="{BORDER}"/>
-  <rect x="{24 + box_w + box_gap}" y="{box_y}" width="{box_w}" height="{box_h}" rx="12" fill="#0B1220" stroke="{BORDER}"/>
+  <rect x="24" y="{box_y}" width="{box_w}" height="{box_h}" rx="12" fill="{BOX_BG}" stroke="{BORDER}"/>
+  <rect x="{24 + box_w + gap}" y="{box_y}" width="{box_w}" height="{box_h}" rx="12" fill="{BOX_BG}" stroke="{BORDER}"/>
 
   <text x="{24 + box_w/2}" y="{box_y + 28}" text-anchor="middle" fill="#FFB86C" font-size="14" font-weight="900" font-family="{FONT}">
     Questions Solved
@@ -183,15 +206,16 @@ def build_svg(display_name: str, username: str, qs, ad, easy, medium, hard, logo
     {esc(qs_text)}
   </text>
 
-  <text x="{24 + box_w + box_gap + box_w/2}" y="{box_y + 28}" text-anchor="middle" fill="{ACCENT}" font-size="14" font-weight="900" font-family="{FONT}">
+  <text x="{24 + box_w + gap + box_w/2}" y="{box_y + 28}" text-anchor="middle" fill="{ACCENT}" font-size="14" font-weight="900" font-family="{FONT}">
     Active Days
   </text>
-  <text x="{24 + box_w + box_gap + box_w/2}" y="{box_y + 70}" text-anchor="middle" fill="{TEXT}" font-size="36" font-weight="900" font-family="{FONT}">
+  <text x="{24 + box_w + gap + box_w/2}" y="{box_y + 70}" text-anchor="middle" fill="{TEXT}" font-size="36" font-weight="900" font-family="{FONT}">
     {esc(ad_text)}
   </text>
 
-  <!-- DSA Distribution -->
+  <!-- DSA container -->
   <rect x="{dsa_x}" y="{dsa_y}" width="{dsa_w}" height="{dsa_h}" rx="14" fill="rgba(0,0,0,0)" stroke="{BORDER}"/>
+
   <text x="{dsa_x + 18}" y="{dsa_y + 32}" fill="{TEXT}" font-size="18" font-weight="900" font-family="{FONT}">
     DSA Distribution
   </text>
@@ -199,9 +223,23 @@ def build_svg(display_name: str, username: str, qs, ad, easy, medium, hard, logo
     Based on Difficulty
   </text>
 
-  {dsa_row(row_y0 + 0*(row_h+row_gap), "Easy", GREEN, easy_text)}
-  {dsa_row(row_y0 + 1*(row_h+row_gap), "Medium", ORANGE, med_text)}
-  {dsa_row(row_y0 + 2*(row_h+row_gap), "Hard", RED, hard_text)}
+  <!-- Left donut -->
+  <circle cx="{donut_cx}" cy="{donut_cy}" r="{donut_r}" fill="none" stroke="#21262D" stroke-width="{donut_sw}"/>
+  <g transform="rotate(-90 {donut_cx} {donut_cy})">
+{segs}
+  </g>
+
+  <text x="{donut_cx}" y="{donut_cy + 6}" text-anchor="middle" fill="{TEXT}" font-size="30" font-weight="900" font-family="{FONT}">
+    {total}
+  </text>
+  <text x="{donut_cx}" y="{donut_cy + 28}" text-anchor="middle" fill="{MUTED}" font-size="12" font-weight="700" font-family="{FONT}">
+    Solved
+  </text>
+
+  <!-- Right rows -->
+  {row(row_y0 + 0*(row_h+row_gap), "Easy", GREEN, easy_text if (easy:=easy) is not None else "N/A")}
+  {row(row_y0 + 1*(row_h+row_gap), "Medium", ORANGE, medium_text if (medium_text:=medium) is not None else "N/A")}
+  {row(row_y0 + 2*(row_h+row_gap), "Hard", RED, hard_text if (hard_text:=hard) is not None else "N/A")}
 </svg>
 """
 
@@ -217,7 +255,12 @@ def main():
         text = page.inner_text("body")
         browser.close()
 
-    display_name, username, qs, ad, easy, medium, hard = parse_from_rendered_text(text)
+    display_name, username = parse_name_handle(text)
+    qs = find_stat_int(text, "Questions Solved")
+    ad = find_stat_int(text, "Active Days")
+
+    easy, medium, hard = parse_dsa_block(text)
+
     print("Parsed:", {
         "display_name": display_name,
         "username": username,
