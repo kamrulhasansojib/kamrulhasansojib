@@ -4,7 +4,6 @@ import base64
 import requests
 from playwright.sync_api import sync_playwright
 
-# ===== Config =====
 HANDLE = (os.environ.get("CODOLIO_HANDLE") or "sojib19").strip()
 PROFILE_URL = f"https://codolio.com/profile/{HANDLE}"
 OUT_FILE = "assets/codolio-card.svg"
@@ -51,7 +50,6 @@ def fetch_logo_data_uri(url: str) -> str | None:
 
 
 def find_stat_int(text: str, label: str) -> int | None:
-    # e.g. "Questions Solved 45" or "Questions Solved: 45"
     m = re.search(rf"{re.escape(label)}\s*[:\-]?\s*(\d+)", text, flags=re.IGNORECASE)
     return int(m.group(1)) if m else None
 
@@ -72,11 +70,7 @@ def parse_name_handle(text: str):
 
 
 def parse_dsa_block(text: str):
-    """
-    Try to capture Easy/Medium/Hard from DSA section.
-    Works for patterns like:
-      DSA ... Easy 5 ... Medium 1 ... Hard 0
-    """
+    # Prefer: "DSA ... Easy 5 ... Medium 1 ... Hard 0"
     m = re.search(
         r"DSA.*?Easy\D{0,20}(\d+).*?Medium\D{0,20}(\d+).*?Hard\D{0,20}(\d+)",
         text,
@@ -85,15 +79,12 @@ def parse_dsa_block(text: str):
     if m:
         return int(m.group(1)), int(m.group(2)), int(m.group(3))
 
-    # fallback: try anywhere (less reliable)
+    # fallback: anywhere
     def any_diff(name: str):
         mm = re.search(rf"\b{name}\b\D{{0,15}}(\d+)", text, flags=re.IGNORECASE)
         return int(mm.group(1)) if mm else None
 
-    e = any_diff("Easy")
-    md = any_diff("Medium")
-    h = any_diff("Hard")
-    return e, md, h
+    return any_diff("Easy"), any_diff("Medium"), any_diff("Hard")
 
 
 def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: int, r: int, sw: int):
@@ -121,8 +112,9 @@ def donut_segments(values: dict, order: list[str], colors: dict, cx: int, cy: in
 
 
 def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str | None):
+    # Fixed canvas (same ratio like your other cards)
     W, H = 500, 400
-    rx = 0  # sharp corners
+    rx = 0  # sharp outer corners
 
     qs_text = qs if qs is not None else "N/A"
     ad_text = ad if ad is not None else "N/A"
@@ -146,22 +138,22 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 
     hx = 64
 
-    # Top stat boxes
-    box_y = 96
+    # Top stat boxes (slightly higher to give DSA more space)
+    box_y = 92
     box_w = 216
     box_h = 92
     gap = 20
 
-    # DSA section (two columns)
+    # DSA section (ensure it stays inside 500x400)
     dsa_x = 24
-    dsa_y = 210
+    dsa_y = 198
     dsa_w = 452
-    dsa_h = 166
+    dsa_h = 178  # bottom = 376 (safe)
 
-    # Left donut
-    donut_cx = dsa_x + 95
-    donut_cy = dsa_y + 102
-    donut_r = 54
+    # Donut (left)
+    donut_cx = dsa_x + 96
+    donut_cy = dsa_y + 110
+    donut_r = 56
     donut_sw = 14
 
     dsa_vals = {"Easy": easy_v, "Medium": med_v, "Hard": hard_v}
@@ -172,13 +164,12 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
         cx=donut_cx, cy=donut_cy, r=donut_r, sw=donut_sw
     )
 
-    # Right rows
-    right_x = dsa_x + 190 + 18
-    row_x = right_x
-    row_w = dsa_x + dsa_w - row_x - 18
+    # Right rows (fixed width so never overflows)
+    row_x = dsa_x + 210
+    row_w = dsa_x + dsa_w - row_x - 18  # always inside
     row_h = 34
     row_gap = 12
-    row_y0 = dsa_y + 56
+    row_y0 = dsa_y + 64
 
     def row(y, label, color, value):
         return f"""
@@ -186,6 +177,12 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
   <text x="{row_x + 14}" y="{y + 23}" fill="{color}" font-size="16" font-weight="900" font-family="{FONT}">{label}</text>
   <text x="{row_x + row_w - 14}" y="{y + 23}" text-anchor="end" fill="{TEXT}" font-size="16" font-weight="900" font-family="{FONT}">{esc(value)}</text>
 """
+
+    # Header 2nd line: "Codolio - @sojib19"
+    brand_line = f"""<text x="{hx}" y="74" font-size="16" font-weight="900" font-family="{FONT}">
+    <tspan fill="{ACCENT}">Codolio</tspan>
+    <tspan fill="{MUTED}"> - @{esc(username)}</tspan>
+  </text>"""
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Codolio Card">
   <defs>
@@ -199,15 +196,10 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 
   {logo}
 
-  <text x="{hx}" y="46" fill="{TEXT}" font-size="22" font-weight="900" font-family="{FONT}">
+  <text x="{hx}" y="48" fill="{TEXT}" font-size="22" font-weight="900" font-family="{FONT}">
     {esc(display_name)}
   </text>
-  <text x="{hx}" y="72" fill="{ACCENT}" font-size="17" font-weight="900" font-family="{FONT}">
-    Codolio
-  </text>
-  <text x="{hx}" y="96" fill="{MUTED}" font-size="14" font-weight="700" font-family="{FONT}">
-    @{esc(username)}
-  </text>
+  {brand_line}
 
   <!-- Stat boxes -->
   <rect x="24" y="{box_y}" width="{box_w}" height="{box_h}" rx="12" fill="{BOX_BG}" stroke="{BORDER}"/>
@@ -229,12 +221,8 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 
   <!-- DSA container -->
   <rect x="{dsa_x}" y="{dsa_y}" width="{dsa_w}" height="{dsa_h}" rx="14" fill="rgba(0,0,0,0)" stroke="{BORDER}"/>
-
-  <text x="{dsa_x + 18}" y="{dsa_y + 32}" fill="{TEXT}" font-size="18" font-weight="900" font-family="{FONT}">
+  <text x="{dsa_x + 18}" y="{dsa_y + 34}" fill="{TEXT}" font-size="18" font-weight="900" font-family="{FONT}">
     DSA Distribution
-  </text>
-  <text x="{dsa_x + 18}" y="{dsa_y + 52}" fill="{MUTED}" font-size="12" font-weight="700" font-family="{FONT}">
-    Based on Difficulty
   </text>
 
   <!-- Left donut -->
@@ -243,10 +231,10 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 {segs}
   </g>
 
-  <text x="{donut_cx}" y="{donut_cy + 6}" text-anchor="middle" fill="{TEXT}" font-size="30" font-weight="900" font-family="{FONT}">
+  <text x="{donut_cx}" y="{donut_cy + 8}" text-anchor="middle" fill="{TEXT}" font-size="30" font-weight="900" font-family="{FONT}">
     {total}
   </text>
-  <text x="{donut_cx}" y="{donut_cy + 28}" text-anchor="middle" fill="{MUTED}" font-size="12" font-weight="700" font-family="{FONT}">
+  <text x="{donut_cx}" y="{donut_cy + 30}" text-anchor="middle" fill="{MUTED}" font-size="12" font-weight="800" font-family="{FONT}">
     Solved
   </text>
 
@@ -261,7 +249,7 @@ def build_svg(display_name, username, qs, ad, easy, medium, hard, logo_uri: str 
 def main():
     os.makedirs("assets", exist_ok=True)
 
-    # Render page (Codolio stats are JS-loaded)
+    # Codolio stats are JS-loaded -> render with Playwright
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
